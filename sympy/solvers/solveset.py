@@ -3665,10 +3665,11 @@ def nonlinsolve(system, *symbols):
         return _solveset_work(system, symbols)
 
     # main code of def nonlinsolve() starts from here
+    true_eqns = [eqn for eqn in map(_sympify, system) if eqn.free_symbols & set(symbols)]
     polys, polys_expr, nonpolys, denominators = _separate_poly_nonpoly(
-        system, symbols)
+        true_eqns, symbols)
 
-    if len(symbols) == len(polys):
+    if len(system) == len(polys):
         # If all the equations in the system are poly
         if is_zero_dimensional(polys, symbols):
             # finite number of soln (Zero dimensional system)
@@ -3681,7 +3682,6 @@ def nonlinsolve(system, *symbols):
                 result = substitution(
                     polys_expr, symbols, exclude=denominators)
                 return result
-
         # positive dimensional system
         res = _handle_positive_dimensional(polys, symbols, denominators)
         if res is S.EmptySet and any(not p.domain.is_Exact for p in polys):
