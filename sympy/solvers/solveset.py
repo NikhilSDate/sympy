@@ -3665,9 +3665,9 @@ def nonlinsolve(system, *symbols):
         return _solveset_work(system, symbols)
 
     # main code of def nonlinsolve() starts from here
-    true_eqns = [eqn for eqn in map(_sympify, system) if eqn.free_symbols & set(symbols)]
+    nonconstant = [eqn for eqn in map(_sympify, system) if eqn.free_symbols & set(symbols)]
     polys, polys_expr, nonpolys, denominators = _separate_poly_nonpoly(
-        true_eqns, symbols)
+        nonconstant, symbols)
 
     if len(system) == len(polys):
         # If all the equations in the system are poly
