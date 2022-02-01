@@ -13,7 +13,7 @@ from sympy.core import S, Symbol, Add, Dummy
 from sympy.core.cache import cacheit
 from sympy.core.evalf import pure_complex
 from sympy.core.expr import Expr
-from sympy.core.function import Function, expand_mul
+from sympy.core.function import Function, expand_mul, NumberFunction
 from sympy.core.logic import fuzzy_not
 from sympy.core.mul import Mul, prod
 from sympy.core.numbers import E, pi, oo, Rational, Integer
@@ -55,7 +55,10 @@ _sym = Symbol('x')
 #----------------------------------------------------------------------------#
 
 
-class carmichael(Function):
+class CombinatorialNumberFunction(NumberFunction):
+    pass
+
+class carmichael(NumberFunction):
     """
     Carmichael Numbers:
 
@@ -176,7 +179,7 @@ class carmichael(Function):
 #----------------------------------------------------------------------------#
 
 
-class fibonacci(Function):
+class fibonacci(NumberFunction):
     r"""
     Fibonacci numbers / Fibonacci polynomials
 
@@ -259,7 +262,7 @@ class fibonacci(Function):
 #----------------------------------------------------------------------------#
 
 
-class lucas(Function):
+class lucas(NumberFunction):
     """
     Lucas numbers
 
@@ -310,7 +313,7 @@ class lucas(Function):
 #----------------------------------------------------------------------------#
 
 
-class tribonacci(Function):
+class tribonacci(NumberFunction):
     r"""
     Tribonacci numbers / Tribonacci polynomials
 
@@ -397,7 +400,7 @@ class tribonacci(Function):
 #----------------------------------------------------------------------------#
 
 
-class bernoulli(Function):
+class bernoulli(NumberFunction):
     r"""
     Bernoulli numbers / Bernoulli polynomials
 
@@ -540,7 +543,7 @@ class bernoulli(Function):
 #----------------------------------------------------------------------------#
 
 
-class bell(Function):
+class bell(NumberFunction):
     r"""
     Bell numbers / Bell polynomials
 
@@ -693,7 +696,7 @@ class bell(Function):
 #----------------------------------------------------------------------------#
 
 
-class harmonic(Function):
+class harmonic(NumberFunction):
     r"""
     Harmonic numbers
 
@@ -924,7 +927,7 @@ class harmonic(Function):
 #----------------------------------------------------------------------------#
 
 
-class euler(Function):
+class euler(NumberFunction):
     r"""
     Euler numbers / Euler polynomials
 
@@ -1071,7 +1074,7 @@ class euler(Function):
 #----------------------------------------------------------------------------#
 
 
-class catalan(Function):
+class catalan(NumberFunction):
     r"""
     Catalan numbers
 
@@ -1217,7 +1220,7 @@ class catalan(Function):
 #----------------------------------------------------------------------------#
 
 
-class genocchi(Function):
+class genocchi(NumberFunction):
     r"""
     Genocchi numbers
 
@@ -1314,7 +1317,7 @@ class genocchi(Function):
 #----------------------------------------------------------------------------#
 
 _npartition = [1, 1]
-class partition(Function):
+class partition(NumberFunction):
     r"""
     Partition numbers
 
@@ -2050,7 +2053,7 @@ def nT(n, k=None):
 #-----------------------------------------------------------------------------#
 
 
-class motzkin(Function):
+class motzkin(NumberFunction):
     """
     The nth Motzkin number is the number
     of ways of drawing non-intersecting chords

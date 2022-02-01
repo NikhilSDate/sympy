@@ -33,6 +33,7 @@ There are three types of functions implemented in SymPy:
 from typing import Any, Dict as tDict, Optional, Set as tSet, Tuple as tTuple, Union as tUnion
 from collections.abc import Iterable
 
+from .kind import NumberKind, UndefinedKind
 from .add import Add
 from .assumptions import ManagedProperties
 from .basic import Basic, _atomic
@@ -880,6 +881,14 @@ class UndefSageHelper:
             return lambda : sage.function(ins.__class__.__name__)(*args)
 
 _undef_sage_helper = UndefSageHelper()
+
+
+class NumberFunction(Function):
+    @property
+    def kind(self):
+        if all(arg.kind == NumberKind for arg in self.args):
+            return NumberKind
+        return UndefinedKind
 
 class UndefinedFunction(FunctionClass):
     """

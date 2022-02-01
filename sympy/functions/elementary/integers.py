@@ -5,7 +5,7 @@ from sympy.core.expr import Expr
 
 from sympy.core import Add, S
 from sympy.core.evalf import get_integer_part, PrecisionExhausted
-from sympy.core.function import Function
+from sympy.core.function import Function, NumberFunction
 from sympy.core.logic import fuzzy_or
 from sympy.core.numbers import Integer
 from sympy.core.relational import Gt, Lt, Ge, Le, Relational, is_eq
@@ -18,7 +18,7 @@ from sympy.multipledispatch import dispatch
 ###############################################################################
 
 
-class RoundFunction(Function):
+class RoundFunction(NumberFunction):
     """Abstract base class for rounding functions."""
 
     args: tTuple[Expr]

@@ -3,7 +3,7 @@ from typing import Tuple as tTuple
 from sympy.core.add import Add
 from sympy.core.basic import sympify, cacheit
 from sympy.core.expr import Expr
-from sympy.core.function import Function, ArgumentIndexError, PoleError, expand_mul
+from sympy.core.function import Function, ArgumentIndexError, PoleError, expand_mul, NumberFunction
 from sympy.core.logic import fuzzy_not, fuzzy_or, FuzzyBool, fuzzy_and
 from sympy.core.numbers import igcdex, Rational, pi, Integer
 from sympy.core.relational import Ne
@@ -25,7 +25,7 @@ from sympy.utilities.iterables import numbered_symbols
 ###############################################################################
 
 
-class TrigonometricFunction(Function):
+class TrigonometricFunction(NumberFunction):
     """Base class for trigonometric functions. """
 
     unbranched = True
@@ -1922,7 +1922,7 @@ class csc(ReciprocalTrigonometricFunction):
                     bernoulli(2*k)*x**(2*k - 1)/factorial(2*k))
 
 
-class sinc(Function):
+class sinc(NumberFunction):
     r"""
     Represents an unnormalized sinc function:
 
@@ -2046,7 +2046,7 @@ class sinc(Function):
 ###############################################################################
 
 
-class InverseTrigonometricFunction(Function):
+class InverseTrigonometricFunction(NumberFunction):
     """Base class for inverse trigonometric functions."""
     _singularities = (S.One, S.NegativeOne, S.Zero, S.ComplexInfinity)  # type: tTuple[Expr, ...]
 

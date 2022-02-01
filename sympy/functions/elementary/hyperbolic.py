@@ -2,7 +2,7 @@ from sympy.core.logic import FuzzyBool
 
 from sympy.core import S, sympify, cacheit, pi, I, Rational
 from sympy.core.add import Add
-from sympy.core.function import Function, ArgumentIndexError
+from sympy.core.function import Function, ArgumentIndexError, NumberFunction
 from sympy.functions.combinatorial.factorials import factorial, RisingFactorial
 from sympy.functions.elementary.exponential import exp, log, match_real_imag
 from sympy.functions.elementary.miscellaneous import sqrt
@@ -21,7 +21,7 @@ def _rewrite_hyperbolics_as_exp(expr):
 ###############################################################################
 
 
-class HyperbolicFunction(Function):
+class HyperbolicFunction(NumberFunction):
     """
     Base class for hyperbolic functions.
 
@@ -1101,7 +1101,7 @@ class sech(ReciprocalHyperbolicFunction):
 ############################# HYPERBOLIC INVERSES #############################
 ###############################################################################
 
-class InverseHyperbolicFunction(Function):
+class InverseHyperbolicFunction(NumberFunction):
     """Base class for inverse hyperbolic functions."""
 
     pass

@@ -4,7 +4,7 @@ from sympy.core import S, Add, Mul, sympify, Symbol, Dummy, Basic
 from sympy.core.expr import Expr
 from sympy.core.exprtools import factor_terms
 from sympy.core.function import (Function, Derivative, ArgumentIndexError,
-    AppliedUndef, expand_mul)
+                                 AppliedUndef, expand_mul, NumberFunction)
 from sympy.core.logic import fuzzy_not, fuzzy_or
 from sympy.core.numbers import pi, I, oo
 from sympy.core.power import Pow
@@ -20,7 +20,7 @@ from sympy.functions.elementary.trigonometric import atan, atan2
 ###############################################################################
 
 
-class re(Function):
+class re(NumberFunction):
     """
     Returns real part of expression. This function performs only
     elementary analysis and so it will fail to decompose properly
@@ -142,7 +142,7 @@ class re(Function):
             return True
 
 
-class im(Function):
+class im(NumberFunction):
     """
     Returns imaginary part of expression. This function performs only
     elementary analysis and so it will fail to decompose properly more
@@ -265,7 +265,7 @@ class im(Function):
 ############### SIGN, ABSOLUTE VALUE, ARGUMENT and CONJUGATION ################
 ###############################################################################
 
-class sign(Function):
+class sign(NumberFunction):
     """
     Returns the complex sign of an expression:
 
@@ -446,7 +446,7 @@ class sign(Function):
         return self.func(factor_terms(self.args[0]))  # XXX include doit?
 
 
-class Abs(Function):
+class Abs(NumberFunction):
     """
     Return the absolute value of the argument.
 
@@ -695,7 +695,7 @@ class Abs(Function):
         return (arg*conjugate(arg))**S.Half
 
 
-class arg(Function):
+class arg(NumberFunction):
     r"""
     Returns the argument (in radians) of a complex number. The argument is
     evaluated in consistent convention with ``atan2`` where the branch-cut is
@@ -789,7 +789,7 @@ class arg(Function):
         return atan2(y, x)
 
 
-class conjugate(Function):
+class conjugate(NumberFunction):
     """
     Returns the *complex conjugate* [1]_ of an argument.
     In mathematics, the complex conjugate of a complex number

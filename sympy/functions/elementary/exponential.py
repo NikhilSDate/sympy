@@ -5,7 +5,8 @@ from sympy.core import sympify
 from sympy.core.add import Add
 from sympy.core.cache import cacheit
 from sympy.core.function import (Function, ArgumentIndexError, expand_log,
-    expand_mul, FunctionClass, PoleError, expand_multinomial, expand_complex)
+                                 expand_mul, FunctionClass, PoleError, expand_multinomial, expand_complex,
+                                 NumberFunction)
 from sympy.core.logic import fuzzy_and, fuzzy_not, fuzzy_or
 from sympy.core.mul import Mul
 from sympy.core.numbers import Integer, Rational, pi, I
@@ -30,7 +31,7 @@ from sympy.sets.setexpr import SetExpr
 # p.is_positive.]
 
 
-class ExpBase(Function):
+class ExpBase(NumberFunction):
 
     unbranched = True
     _singularities = (S.ComplexInfinity,)
@@ -583,7 +584,7 @@ def match_real_imag(expr):
         return (None, None) # simpler to check for than None
 
 
-class log(Function):
+class log(NumberFunction):
     r"""
     The natural logarithm function `\ln(x)` or `\log(x)`.
 
