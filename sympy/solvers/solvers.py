@@ -272,10 +272,6 @@ def checksol(f, symbol, sol=None, **flags):
 
     if isinstance(f, BooleanAtom):
         return bool(f)
-    elif isinstance(f, int):
-        return f == 0
-    elif isinstance(f, float):
-        return abs(f) < 1e-9
     elif not f.is_Relational and not f:
         return True
 

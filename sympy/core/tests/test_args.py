@@ -643,6 +643,9 @@ def test_sympy__core__function__Derivative():
 def test_sympy__core__function__Function():
     pass
 
+@SKIP("abstract class")
+def test_sympy__core__function__NumberFunction():
+    pass
 
 def test_sympy__core__function__Lambda():
     assert _test_args(Lambda((x, y), x + y + z))
@@ -1957,7 +1960,6 @@ def test_sympy__functions__combinatorial__factorials__factorial2():
     from sympy.functions.combinatorial.factorials import factorial2
     assert _test_args(factorial2(x))
 
-
 def test_sympy__functions__combinatorial__numbers__bell():
     from sympy.functions.combinatorial.numbers import bell
     assert _test_args(bell(x, y))
@@ -1972,6 +1974,9 @@ def test_sympy__functions__combinatorial__numbers__catalan():
     from sympy.functions.combinatorial.numbers import catalan
     assert _test_args(catalan(x))
 
+@SKIP("abstract class")
+def test_sympy__functions__combinatorial__numbers__CombinatorialNumberFunction():
+    pass
 
 def test_sympy__functions__combinatorial__numbers__genocchi():
     from sympy.functions.combinatorial.numbers import genocchi

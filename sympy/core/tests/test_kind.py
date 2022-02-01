@@ -19,6 +19,7 @@ def test_NumberKind():
     assert zoo.kind is NumberKind
     assert I.kind is NumberKind
     assert AlgebraicNumber(1).kind is NumberKind
+    # TODO: ADD TESTS FOR NumberFunction subclasses
 
 def test_Add_kind():
     assert Add(2, 3, evaluate=False).kind is NumberKind
