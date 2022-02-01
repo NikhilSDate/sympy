@@ -58,7 +58,7 @@ _sym = Symbol('x')
 class CombinatorialNumberFunction(NumberFunction):
     pass
 
-class carmichael(NumberFunction):
+class carmichael(CombinatorialNumberFunction):
     """
     Carmichael Numbers:
 
@@ -179,7 +179,7 @@ class carmichael(NumberFunction):
 #----------------------------------------------------------------------------#
 
 
-class fibonacci(NumberFunction):
+class fibonacci(CombinatorialNumberFunction):
     r"""
     Fibonacci numbers / Fibonacci polynomials
 
@@ -262,7 +262,7 @@ class fibonacci(NumberFunction):
 #----------------------------------------------------------------------------#
 
 
-class lucas(NumberFunction):
+class lucas(CombinatorialNumberFunction):
     """
     Lucas numbers
 
@@ -313,7 +313,7 @@ class lucas(NumberFunction):
 #----------------------------------------------------------------------------#
 
 
-class tribonacci(NumberFunction):
+class tribonacci(CombinatorialNumberFunction):
     r"""
     Tribonacci numbers / Tribonacci polynomials
 
@@ -400,7 +400,7 @@ class tribonacci(NumberFunction):
 #----------------------------------------------------------------------------#
 
 
-class bernoulli(NumberFunction):
+class bernoulli(CombinatorialNumberFunction):
     r"""
     Bernoulli numbers / Bernoulli polynomials
 
@@ -543,7 +543,7 @@ class bernoulli(NumberFunction):
 #----------------------------------------------------------------------------#
 
 
-class bell(NumberFunction):
+class bell(CombinatorialNumberFunction):
     r"""
     Bell numbers / Bell polynomials
 
@@ -696,7 +696,7 @@ class bell(NumberFunction):
 #----------------------------------------------------------------------------#
 
 
-class harmonic(NumberFunction):
+class harmonic(CombinatorialNumberFunction):
     r"""
     Harmonic numbers
 
@@ -927,7 +927,7 @@ class harmonic(NumberFunction):
 #----------------------------------------------------------------------------#
 
 
-class euler(NumberFunction):
+class euler(CombinatorialNumberFunction):
     r"""
     Euler numbers / Euler polynomials
 
@@ -1074,7 +1074,7 @@ class euler(NumberFunction):
 #----------------------------------------------------------------------------#
 
 
-class catalan(NumberFunction):
+class catalan(CombinatorialNumberFunction):
     r"""
     Catalan numbers
 
@@ -1220,7 +1220,7 @@ class catalan(NumberFunction):
 #----------------------------------------------------------------------------#
 
 
-class genocchi(NumberFunction):
+class genocchi(CombinatorialNumberFunction):
     r"""
     Genocchi numbers
 
@@ -1317,7 +1317,7 @@ class genocchi(NumberFunction):
 #----------------------------------------------------------------------------#
 
 _npartition = [1, 1]
-class partition(NumberFunction):
+class partition(CombinatorialNumberFunction):
     r"""
     Partition numbers
 
@@ -2053,7 +2053,7 @@ def nT(n, k=None):
 #-----------------------------------------------------------------------------#
 
 
-class motzkin(NumberFunction):
+class motzkin(CombinatorialNumberFunction):
     """
     The nth Motzkin number is the number
     of ways of drawing non-intersecting chords

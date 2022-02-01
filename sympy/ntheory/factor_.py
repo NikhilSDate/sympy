@@ -10,7 +10,7 @@ from sympy.core import sympify
 from sympy.core.containers import Dict
 from sympy.core.evalf import bitcount
 from sympy.core.expr import Expr
-from sympy.core.function import Function, NumberFunction
+from sympy.core.function import NumberFunction
 from sympy.core.logic import fuzzy_and
 from sympy.core.mul import Mul, prod
 from sympy.core.numbers import igcd, ilcm, Rational, Integer
@@ -1902,7 +1902,11 @@ def antidivisor_count(n):
         divisor_count(n) - divisor_count(n, 2) - 5
 
 
-class totient(NumberFunction):
+class FactorFunction(NumberFunction):
+    pass
+
+
+class totient(FactorFunction):
     r"""
     Calculate the Euler totient function phi(n)
 
@@ -1983,7 +1987,7 @@ class totient(NumberFunction):
         return t
 
 
-class reduced_totient(NumberFunction):
+class reduced_totient(FactorFunction):
     r"""
     Calculate the Carmichael reduced totient function lambda(n)
 
@@ -2046,7 +2050,7 @@ class reduced_totient(NumberFunction):
         return fuzzy_and([self.args[0].is_integer, self.args[0].is_positive])
 
 
-class divisor_sigma(NumberFunction):
+class divisor_sigma(FactorFunction):
     r"""
     Calculate the divisor function `\sigma_k(n)` for positive integer n
 
@@ -2200,7 +2204,7 @@ def core(n, t=2):
         return y
 
 
-class udivisor_sigma(NumberFunction):
+class udivisor_sigma(FactorFunction):
     r"""
     Calculate the unitary divisor function `\sigma_k^*(n)` for positive integer n
 
@@ -2266,7 +2270,7 @@ class udivisor_sigma(NumberFunction):
                 return Mul(*[1+p**(k*e) for p, e in factorint(n).items()])
 
 
-class primenu(NumberFunction):
+class primenu(FactorFunction):
     r"""
     Calculate the number of distinct prime factors for a positive integer n.
 
@@ -2311,7 +2315,7 @@ class primenu(NumberFunction):
                 return len(factorint(n).keys())
 
 
-class primeomega(NumberFunction):
+class primeomega(FactorFunction):
     r"""
     Calculate the number of prime factors counting multiplicities for a
     positive integer n.

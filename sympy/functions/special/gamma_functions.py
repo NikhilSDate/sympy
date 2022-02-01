@@ -29,7 +29,12 @@ def intlike(n):
 ############################ COMPLETE GAMMA FUNCTION ##########################
 ###############################################################################
 
-class gamma(NumberFunction):
+
+class GammaBase(NumberFunction):
+    pass
+
+
+class gamma(GammaBase):
     r"""
     The gamma function
 
@@ -218,7 +223,7 @@ class gamma(NumberFunction):
 ################## LOWER and UPPER INCOMPLETE GAMMA FUNCTIONS #################
 ###############################################################################
 
-class lowergamma(NumberFunction):
+class lowergamma(GammaBase):
     r"""
     The lower incomplete gamma function.
 
@@ -394,7 +399,7 @@ class lowergamma(NumberFunction):
             return True
 
 
-class uppergamma(NumberFunction):
+class uppergamma(GammaBase):
     r"""
     The upper incomplete gamma function.
 
@@ -560,7 +565,7 @@ class uppergamma(NumberFunction):
 ###################### POLYGAMMA and LOGGAMMA FUNCTIONS #######################
 ###############################################################################
 
-class polygamma(NumberFunction):
+class polygamma(GammaBase):
     r"""
     The function ``polygamma(n, z)`` returns ``log(gamma(z)).diff(n + 1)``.
 
@@ -856,7 +861,7 @@ class polygamma(NumberFunction):
             return self.func(n, z)
 
 
-class loggamma(NumberFunction):
+class loggamma(GammaBase):
     r"""
     The ``loggamma`` function implements the logarithm of the
     gamma function (i.e., $\log\Gamma(x)$).
@@ -1053,7 +1058,7 @@ class loggamma(NumberFunction):
             raise ArgumentIndexError(self, argindex)
 
 
-class digamma(NumberFunction):
+class digamma(GammaBase):
     r"""
     The ``digamma`` function is the first derivative of the ``loggamma``
     function
@@ -1147,7 +1152,7 @@ class digamma(NumberFunction):
 
 
 
-class trigamma(NumberFunction):
+class trigamma(GammaBase):
     r"""
     The ``trigamma`` function is the second derivative of the ``loggamma``
     function
@@ -1248,7 +1253,7 @@ class trigamma(NumberFunction):
 ###############################################################################
 
 
-class multigamma(NumberFunction):
+class multigamma(GammaBase):
     r"""
     The multivariate gamma function is a generalization of the gamma function
 

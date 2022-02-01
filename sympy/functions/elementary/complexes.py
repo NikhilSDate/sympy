@@ -19,8 +19,10 @@ from sympy.functions.elementary.trigonometric import atan, atan2
 ######################### REAL and IMAGINARY PARTS ############################
 ###############################################################################
 
+class ComplexFunction(NumberFunction):
+    pass
 
-class re(NumberFunction):
+class re(ComplexFunction):
     """
     Returns real part of expression. This function performs only
     elementary analysis and so it will fail to decompose properly
@@ -142,7 +144,7 @@ class re(NumberFunction):
             return True
 
 
-class im(NumberFunction):
+class im(ComplexFunction):
     """
     Returns imaginary part of expression. This function performs only
     elementary analysis and so it will fail to decompose properly more
@@ -265,7 +267,7 @@ class im(NumberFunction):
 ############### SIGN, ABSOLUTE VALUE, ARGUMENT and CONJUGATION ################
 ###############################################################################
 
-class sign(NumberFunction):
+class sign(ComplexFunction):
     """
     Returns the complex sign of an expression:
 
@@ -446,7 +448,7 @@ class sign(NumberFunction):
         return self.func(factor_terms(self.args[0]))  # XXX include doit?
 
 
-class Abs(NumberFunction):
+class Abs(ComplexFunction):
     """
     Return the absolute value of the argument.
 
@@ -695,7 +697,7 @@ class Abs(NumberFunction):
         return (arg*conjugate(arg))**S.Half
 
 
-class arg(NumberFunction):
+class arg(ComplexFunction):
     r"""
     Returns the argument (in radians) of a complex number. The argument is
     evaluated in consistent convention with ``atan2`` where the branch-cut is
@@ -789,7 +791,7 @@ class arg(NumberFunction):
         return atan2(y, x)
 
 
-class conjugate(NumberFunction):
+class conjugate(ComplexFunction):
     """
     Returns the *complex conjugate* [1]_ of an argument.
     In mathematics, the complex conjugate of a complex number
