@@ -3690,25 +3690,8 @@ def nonlinsolve(system, *symbols):
                 return S.EmptySet
         if not nonpolys:
             return poly_res
-        final_sol = []
-        for sol in poly_res.args:
-            sol = dict(zip(symbols, sol))
-            nonpolys = [eq.subs(sol) for eq in nonpolys]
-            remaining_syms = set().union(*[eq.free_symbols for eq in nonpolys])
-            result = substitution(nonpolys, list(remaining_syms), exclude=denominators)
-            if result is not S.EmptySet:
-                for nonpoly_sol in result.args:
-                    nonpoly_sol = dict(zip(remaining_syms, nonpoly_sol))
-                    non_set = {key: val for (key, val) in nonpoly_sol.items() if not isinstance(val, Set)}
-                    temp = dict(sol)
-                    temp.update(nonpoly_sol)
-                    for key, val in temp.items():
-                        if not isinstance(val, Set):
-                            temp[key] = val.subs(non_set)
-                        elif val in nonpoly_sol:
-                            temp[key] = nonpoly_sol[val]
-                    final_sol.append(tuple(temp.values()))
-        return FiniteSet(*final_sol)
+        poly_sol = [dict(zip(symbols, sol)) for sol in poly_res.args]
+        return substitution(nonpolys, symbols, result=poly_sol, exclude=denominators)
     # If all the equations are not polynomial.
     # Use `substitution` method for the system
     else:
