@@ -3668,30 +3668,48 @@ def nonlinsolve(system, *symbols):
     nonconstant = [eqn for eqn in map(_sympify, system) if eqn.free_symbols & set(symbols)]
     polys, polys_expr, nonpolys, denominators = _separate_poly_nonpoly(
         nonconstant, symbols)
-
-    if len(system) == len(polys):
-        # If all the equations in the system are poly
+    # first solve all polynomial equations:
+    if polys:
         if is_zero_dimensional(polys, symbols):
             # finite number of soln (Zero dimensional system)
             try:
-                return _handle_zero_dimensional(polys, symbols, system)
+                poly_res =  _handle_zero_dimensional(polys, symbols, nonconstant)
             except NotImplementedError:
                 # Right now it doesn't fail for any polynomial system of
                 # equation. If `solve_poly_system` fails then `substitution`
                 # method will handle it.
-                result = substitution(
+                poly_res = substitution(
                     polys_expr, symbols, exclude=denominators)
-                return result
-        # positive dimensional system
-        res = _handle_positive_dimensional(polys, symbols, denominators)
-        if res is S.EmptySet and any(not p.domain.is_Exact for p in polys):
-            raise NotImplementedError("Equation not in exact domain. Try converting to rational")
         else:
-            return res
-
+            # positive dimensional system
+            poly_res = _handle_positive_dimensional(polys, symbols, denominators)
+        if poly_res is S.EmptySet:
+            if any(not p.domain.is_Exact for p in polys):
+                return substitution(polys_expr + nonpolys, symbols, exclude=denominators)
+            else:
+                return S.EmptySet
+        if not nonpolys:
+            return poly_res
+        final_sol = []
+        for sol in poly_res.args:
+            sol = dict(zip(symbols, sol))
+            nonpolys = [eq.subs(sol) for eq in nonpolys]
+            remaining_syms = set().union(*[eq.free_symbols for eq in nonpolys])
+            result = substitution(nonpolys, list(remaining_syms), exclude=denominators)
+            if result is not S.EmptySet:
+                for nonpoly_sol in result.args:
+                    nonpoly_sol = dict(zip(remaining_syms, nonpoly_sol))
+                    non_set = {key: val for (key, val) in nonpoly_sol.items() if not isinstance(val, Set)}
+                    temp = dict(sol)
+                    temp.update(nonpoly_sol)
+                    for key, val in temp.items():
+                        if not isinstance(val, Set):
+                            temp[key] = val.subs(non_set)
+                        elif val in nonpoly_sol:
+                            temp[key] = nonpoly_sol[val]
+                    final_sol.append(tuple(temp.values()))
+        return FiniteSet(*final_sol)
+    # If all the equations are not polynomial.
+    # Use `substitution` method for the system
     else:
-        # If all the equations are not polynomial.
-        # Use `substitution` method for the system
-        result = substitution(
-            polys_expr + nonpolys, symbols, exclude=denominators)
-        return result
+        return substitution(nonpolys, symbols, exclude=denominators)

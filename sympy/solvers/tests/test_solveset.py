@@ -1847,8 +1847,8 @@ def test_issue_10876():
 def test_issue_19050():
     # test_issue_19050 --> TypeError removed
     assert dumeq(nonlinsolve([x + y, sin(y)], [x, y]),
-        FiniteSet((ImageSet(Lambda(n, -2*n*pi), S.Integers), ImageSet(Lambda(n, 2*n*pi), S.Integers)),\
-             (ImageSet(Lambda(n, -2*n*pi - pi), S.Integers), ImageSet(Lambda(n, 2*n*pi + pi), S.Integers))))
+        FiniteSet((-y, ImageSet(Lambda(n, 2*n*pi + pi), S.Integers)),
+                 (-y, ImageSet(Lambda(n, n*pi), S.Integers))))
     assert dumeq(nonlinsolve([x + y, sin(y) + cos(y)], [x, y]),
         FiniteSet((ImageSet(Lambda(n, -2*n*pi - 3*pi/4), S.Integers), ImageSet(Lambda(n, 2*n*pi + 3*pi/4), S.Integers)), \
             (ImageSet(Lambda(n, -2*n*pi - 7*pi/4), S.Integers), ImageSet(Lambda(n, 2*n*pi + 7*pi/4), S.Integers))))
@@ -3010,16 +3010,16 @@ def test_issue_15024():
 
 def test_issue_16877():
     assert dumeq(nonlinsolve([x - 1, sin(y)], x, y),
-                 FiniteSet((FiniteSet(1), ImageSet(Lambda(n, 2*n*pi), S.Integers)),
-                           (FiniteSet(1), ImageSet(Lambda(n, 2*n*pi + pi), S.Integers))))
+                 FiniteSet((1, ImageSet(Lambda(n, 2*n*pi), S.Integers)),
+                           (1, ImageSet(Lambda(n, 2*n*pi + pi), S.Integers))))
     # Even better if (FiniteSet(1), ImageSet(Lambda(n, n*pi), S.Integers)) is obtained
 
 
 def test_issue_16876():
     assert dumeq(nonlinsolve([sin(x), 2*x - 4*y], x, y),
-                 FiniteSet((ImageSet(Lambda(n, 2*n*pi), S.Integers),
+                 FiniteSet((2*y,
                             ImageSet(Lambda(n, n*pi), S.Integers)),
-                           (ImageSet(Lambda(n, 2*n*pi + pi), S.Integers),
+                           (2*y,
                             ImageSet(Lambda(n, n*pi + pi/2), S.Integers))))
     # Even better if (ImageSet(Lambda(n, n*pi), S.Integers),
     #                 ImageSet(Lambda(n, n*pi/2), S.Integers)) is obtained
