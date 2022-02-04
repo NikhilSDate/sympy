@@ -5,8 +5,7 @@ from sympy.core import sympify
 from sympy.core.add import Add
 from sympy.core.cache import cacheit
 from sympy.core.function import (Function, ArgumentIndexError, expand_log,
-                                 expand_mul, FunctionClass, PoleError, expand_multinomial, expand_complex,
-                                 NumberFunction)
+    expand_mul, FunctionClass, PoleError, expand_multinomial, expand_complex, NumberFunction)
 from sympy.core.logic import fuzzy_and, fuzzy_not, fuzzy_or
 from sympy.core.mul import Mul
 from sympy.core.numbers import Integer, Rational, pi, I

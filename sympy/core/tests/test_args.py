@@ -647,6 +647,7 @@ def test_sympy__core__function__Function():
 def test_sympy__core__function__NumberFunction():
     pass
 
+
 def test_sympy__core__function__Lambda():
     assert _test_args(Lambda((x, y), x + y + z))
 
@@ -1977,6 +1978,7 @@ def test_sympy__functions__combinatorial__numbers__catalan():
 @SKIP("abstract class")
 def test_sympy__functions__combinatorial__numbers__CombinatorialNumberFunction():
     pass
+
 
 def test_sympy__functions__combinatorial__numbers__genocchi():
     from sympy.functions.combinatorial.numbers import genocchi
