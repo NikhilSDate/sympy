@@ -884,6 +884,11 @@ _undef_sage_helper = UndefSageHelper()
 
 
 class NumberFunction(Function):
+    """
+    Base class for functions which evaluate to a value of kind NumberKind
+    when all args are of kind NumberKind
+    """
+
     @property
     def kind(self):
         if all(arg.kind == NumberKind for arg in self.args):

@@ -56,6 +56,9 @@ _sym = Symbol('x')
 
 
 class CombinatorialNumberFunction(NumberFunction):
+    """
+    Base class for combinatorial number functions
+    """
     pass
 
 class carmichael(CombinatorialNumberFunction):

@@ -1902,11 +1902,7 @@ def antidivisor_count(n):
         divisor_count(n) - divisor_count(n, 2) - 5
 
 
-class FactorFunction(NumberFunction):
-    pass
-
-
-class totient(FactorFunction):
+class totient(NumberFunction):
     r"""
     Calculate the Euler totient function phi(n)
 
@@ -1987,7 +1983,7 @@ class totient(FactorFunction):
         return t
 
 
-class reduced_totient(FactorFunction):
+class reduced_totient(NumberFunction):
     r"""
     Calculate the Carmichael reduced totient function lambda(n)
 
@@ -2050,7 +2046,7 @@ class reduced_totient(FactorFunction):
         return fuzzy_and([self.args[0].is_integer, self.args[0].is_positive])
 
 
-class divisor_sigma(FactorFunction):
+class divisor_sigma(NumberFunction):
     r"""
     Calculate the divisor function `\sigma_k(n)` for positive integer n
 
@@ -2204,7 +2200,7 @@ def core(n, t=2):
         return y
 
 
-class udivisor_sigma(FactorFunction):
+class udivisor_sigma(NumberFunction):
     r"""
     Calculate the unitary divisor function `\sigma_k^*(n)` for positive integer n
 
@@ -2270,7 +2266,7 @@ class udivisor_sigma(FactorFunction):
                 return Mul(*[1+p**(k*e) for p, e in factorint(n).items()])
 
 
-class primenu(FactorFunction):
+class primenu(NumberFunction):
     r"""
     Calculate the number of distinct prime factors for a positive integer n.
 
@@ -2315,7 +2311,7 @@ class primenu(FactorFunction):
                 return len(factorint(n).keys())
 
 
-class primeomega(FactorFunction):
+class primeomega(NumberFunction):
     r"""
     Calculate the number of prime factors counting multiplicities for a
     positive integer n.

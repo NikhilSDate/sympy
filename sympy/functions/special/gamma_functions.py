@@ -31,6 +31,9 @@ def intlike(n):
 
 
 class GammaBase(NumberFunction):
+    """
+    Base class for the gamma function and its variants
+    """
     pass
 
 

@@ -2039,6 +2039,11 @@ def test_sympy__functions__elementary__complexes__arg():
     assert _test_args(arg(x))
 
 
+@SKIP("abstract class")
+def test_sympy__functions__elementary__complexes__ComplexFunction():
+    pass
+
+
 def test_sympy__functions__elementary__complexes__conjugate():
     from sympy.functions.elementary.complexes import conjugate
     assert _test_args(conjugate(x))
@@ -2540,6 +2545,11 @@ def test_sympy__functions__special__error_functions__expint():
 def test_sympy__functions__special__gamma_functions__gamma():
     from sympy.functions.special.gamma_functions import gamma
     assert _test_args(gamma(x))
+
+
+@SKIP("abstract class")
+def test_sympy__functions__special__gamma_functions__GammaBase():
+    pass
 
 
 def test_sympy__functions__special__gamma_functions__loggamma():
@@ -4851,6 +4861,11 @@ def test_sympy__categories__baseclasses__Category():
     d2 = Diagram([f])
     K = Category("K", commutative_diagrams=[d1, d2])
     assert _test_args(K)
+
+
+@SKIP("abstract class")
+def test_sympy__ntheory__factor___FactorFunction():
+    pass
 
 
 def test_sympy__ntheory__factor___totient():

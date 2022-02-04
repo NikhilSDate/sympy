@@ -20,6 +20,9 @@ from sympy.functions.elementary.trigonometric import atan, atan2
 ###############################################################################
 
 class ComplexFunction(NumberFunction):
+    """
+    Base class for elementary functions of complex numbers
+    """
     pass
 
 class re(ComplexFunction):
