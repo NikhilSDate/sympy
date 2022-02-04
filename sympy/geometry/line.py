@@ -37,7 +37,6 @@ from sympy.matrices import Matrix
 from sympy.sets.sets import Intersection
 from sympy.simplify.simplify import simplify
 from sympy.solvers.solveset import linear_coeffs
-from sympy.utilities.decorator import deprecated
 from sympy.utilities.exceptions import SymPyDeprecationWarning
 from sympy.utilities.misc import Undecidable, filldedent
 
@@ -1110,6 +1109,9 @@ class Line(LinearEntity):
     for `Line2D` and the `direction_ratio` argument is only relevant
     for `Line3D`.
 
+    The order of the points will define the direction of the line
+    which is used when calculating the angle between lines.
+
     See Also
     ========
 
@@ -1280,10 +1282,6 @@ class Line(LinearEntity):
         if self.contains(other):
             return S.Zero
         return self.perpendicular_segment(other).length
-
-    @deprecated(useinstead="equals", issue=12860, deprecated_since_version="1.0")
-    def equal(self, other):
-        return self.equals(other)
 
     def equals(self, other):
         """Returns True if self and other are the same mathematical entities"""
