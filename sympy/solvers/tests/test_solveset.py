@@ -1683,8 +1683,8 @@ def test_nonlinsolve_using_substitution():
 
 def test_nonlinsolve_complex():
     n = Dummy('n')
-    assert dumeq(nonlinsolve([exp(x) - sin(y), 1/y - 3], [x, y]), {
-        (ImageSet(Lambda(n, 2*n*I*pi + log(sin(Rational(1, 3)))), S.Integers), Rational(1, 3))})
+    assert dumeq(nonlinsolve([exp(x) - sin(y), 1/y - 3], [x, y]), FiniteSet((log(sin(Rational(1, 3))), Rational(1, 3)),
+        (ImageSet(Lambda(n, 2*n*I*pi + log(sin(Rational(1, 3)))), S.Integers), Rational(1, 3))))
 
     system = [exp(x) - sin(y), 1/exp(y) - 3]
     assert dumeq(nonlinsolve(system, [x, y]), {
@@ -1695,7 +1695,7 @@ def test_nonlinsolve_complex():
         ImageSet(Lambda(n, 2*n*I*pi - log(3)), S.Integers))})
 
     system = [exp(x) - sin(y), y**2 - 4]
-    assert dumeq(nonlinsolve(system, [x, y]), {
+    assert dumeq(nonlinsolve(system, [x, y]), {(log(sin(2)), 2),
         (ImageSet(Lambda(n, I*(2*n*pi + pi) + log(sin(2))), S.Integers), -2),
         (ImageSet(Lambda(n, 2*n*I*pi + log(sin(2))), S.Integers), 2)})
 
@@ -1846,8 +1846,8 @@ def test_issue_10876():
 def test_issue_19050():
     # test_issue_19050 --> TypeError removed
     assert dumeq(nonlinsolve([x + y, sin(y)], [x, y]),
-        FiniteSet((-2*n*pi, ImageSet(Lambda(n, 2*n*pi + pi), S.Integers)),
-                 (-2*n*pi-pi, ImageSet(Lambda(n, n*pi), S.Integers))))
+        FiniteSet((-2*n*pi, ImageSet(Lambda(n, 2*n*pi), S.Integers)),
+                 (-2*n*pi-pi, ImageSet(Lambda(n, 2*n*pi+pi), S.Integers))))
     assert dumeq(nonlinsolve([x + y, sin(y) + cos(y)], [x, y]),
         FiniteSet((ImageSet(Lambda(n, -2*n*pi - 3*pi/4), S.Integers), ImageSet(Lambda(n, 2*n*pi + 3*pi/4), S.Integers)), \
             (ImageSet(Lambda(n, -2*n*pi - 7*pi/4), S.Integers), ImageSet(Lambda(n, 2*n*pi + 7*pi/4), S.Integers))))
@@ -2125,7 +2125,7 @@ def test_issue_17933():
 def test_issue_14565():
     # removed redundancy
     assert dumeq(nonlinsolve([k + m, k + m*exp(-2*pi*k)], [k, m]) ,
-        FiniteSet((-n*I, ImageSet(Lambda(n, n*I), S.Integers))))
+        FiniteSet((0, 0), (-n*I, ImageSet(Lambda(n, n*I), S.Integers))))
 
 
 # end of tests for nonlinsolve
@@ -3015,6 +3015,7 @@ def test_issue_16877():
 
 
 def test_issue_16876():
+    n = Dummy('n')
     assert dumeq(nonlinsolve([sin(x), 2*x - 4*y], x, y),
                  FiniteSet((2*n*pi,
                             ImageSet(Lambda(n, n*pi), S.Integers)),
