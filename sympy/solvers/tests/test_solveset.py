@@ -1584,7 +1584,6 @@ def test_nonlinsolve_abs():
 def test_raise_exception_nonlinsolve():
     raises(IndexError, lambda: nonlinsolve([x**2 -1], []))
     raises(ValueError, lambda: nonlinsolve([x**2 -1]))
-    raises(NotImplementedError, lambda: nonlinsolve([(x+y)**2 - 9, x**2 - y**2 - 0.75], (x, y)))
 
 
 def test_trig_system():
