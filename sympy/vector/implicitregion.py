@@ -300,6 +300,7 @@ class ImplicitRegion(Basic):
         eq_list = [self.equation]
         for var in self.variables:
             eq_list += [diff(self.equation, var)]
+
         return nonlinsolve(eq_list, list(self.variables))
 
     def multiplicity(self, point):
