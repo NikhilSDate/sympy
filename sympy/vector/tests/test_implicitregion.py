@@ -39,7 +39,7 @@ def test_singular_points_and_multiplicty():
     assert r1.multiplicity((0, 0, 0)) == 1
     assert r1.multiplicity((-y - z, y, z)) == 1
     r2 = ImplicitRegion((x, y, z), x*y*z + y**4 -x**2*z**2)
-    assert r2.singular_points() == FiniteSet((0, 0, z))
+    assert r2.singular_points() == FiniteSet((0, 0, z), (x, 0, 0))
     assert r2.multiplicity((0, 0, 0)) == 3
     assert r2.multiplicity((0, 0, 6)) == 2
     r3 = ImplicitRegion((x, y, z), z**2 - x**2 - y**2)
