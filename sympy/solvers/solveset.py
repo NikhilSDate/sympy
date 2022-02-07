@@ -3571,8 +3571,9 @@ def nonlinsolve(system, *symbols):
 
     >>> from sympy import exp, sin
     >>> nonlinsolve([exp(x) - sin(y), y**2 - 4], [x, y])
-    {(ImageSet(Lambda(_n, I*(2*_n*pi + pi) + log(sin(2))), Integers), -2),
-     (ImageSet(Lambda(_n, 2*_n*I*pi + log(sin(2))), Integers), 2)}
+    {(log(sin(2)), 2),
+    (ImageSet(Lambda(_n, I*(2*_n*pi + pi) + log(sin(2))), Integers), -2),
+    (ImageSet(Lambda(_n, 2*_n*I*pi + log(sin(2))), Integers), 2)}
 
     3. If system is non-linear polynomial and zero-dimensional then it
     returns both solution (real and complex solutions, if present) using
