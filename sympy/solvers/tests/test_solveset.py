@@ -1845,12 +1845,15 @@ def test_issue_10876():
 
 def test_issue_19050():
     # test_issue_19050 --> TypeError removed
-    assert dumeq(nonlinsolve([x + y, sin(y)], [x, y]),
-        FiniteSet((-2*n*pi, ImageSet(Lambda(n, 2*n*pi), S.Integers)),
-                 (-2*n*pi-pi, ImageSet(Lambda(n, 2*n*pi+pi), S.Integers))))
-    assert dumeq(nonlinsolve([x + y, sin(y) + cos(y)], [x, y]),
-        FiniteSet((ImageSet(Lambda(n, -2*n*pi - 3*pi/4), S.Integers), ImageSet(Lambda(n, 2*n*pi + 3*pi/4), S.Integers)), \
-            (ImageSet(Lambda(n, -2*n*pi - 7*pi/4), S.Integers), ImageSet(Lambda(n, 2*n*pi + 7*pi/4), S.Integers))))
+    res1 = nonlinsolve([x + y, sin(y)], [x, y])
+    sol1 = FiniteSet((-2*n*pi, ImageSet(Lambda(n, 2*n*pi), S.Integers)),
+                 (-2*n*pi-pi, ImageSet(Lambda(n, 2*n*pi+pi), S.Integers)))
+    res2 = nonlinsolve([x + y, sin(y) + cos(y)], [x, y])
+    sol2 = FiniteSet(-2*n*pi-3*pi/4, ImageSet(Lambda(n, 2*n*pi + 3*pi/4), S.Integers),
+            (-2*n*pi-7*pi/4, ImageSet(Lambda(n, 2*n*pi + 7*pi/4), S.Integers)))
+
+    assert res1.func == sol1.func and dumeq(res1.args, sol1.args)
+    assert res2.func == sol2.func and dumeq(res1.args, sol1.args)
 
 
 def test_issue_16618():
@@ -3015,12 +3018,9 @@ def test_issue_16877():
 
 
 def test_issue_16876():
-    n = Dummy('n')
-    assert dumeq(nonlinsolve([sin(x), 2*x - 4*y], x, y),
-                 FiniteSet((2*n*pi,
-                            ImageSet(Lambda(n, n*pi), S.Integers)),
-                           (2*n*pi + pi,
-                            ImageSet(Lambda(n, n*pi + pi/2), S.Integers))))
+    res = nonlinsolve([sin(x), 2*x - 4*y], x, y)
+    sol = FiniteSet((2*n*pi, ImageSet(Lambda(n, n*pi), S.Integers)), (2*n*pi + pi, ImageSet(Lambda(n, n*pi + pi/2), S.Integers)))
+    assert type(res) == type(sol) and dumeq(res.args, sol.args)
     # Even better if (ImageSet(Lambda(n, n*pi), S.Integers),
     #                 ImageSet(Lambda(n, n*pi/2), S.Integers)) is obtained
 
