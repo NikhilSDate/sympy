@@ -3020,7 +3020,7 @@ def test_issue_16877():
 def test_issue_16876():
     res = nonlinsolve([sin(x), 2*x - 4*y], x, y)
     sol = FiniteSet((2*n*pi, ImageSet(Lambda(n, n*pi), S.Integers)), (2*n*pi + pi, ImageSet(Lambda(n, n*pi + pi/2), S.Integers)))
-    assert type(res) == type(sol) and dumeq(res.args, sol.args)
+    assert res.func == sol.func and dumeq(res.args, sol.args)
     # Even better if (ImageSet(Lambda(n, n*pi), S.Integers),
     #                 ImageSet(Lambda(n, n*pi/2), S.Integers)) is obtained
 
