@@ -3657,6 +3657,7 @@ def nonlinsolve(system, *symbols):
                'system is to be found.')
         raise IndexError(filldedent(msg))
 
+    symbols = _sympify(symbols)
     system, symbols, swap = recast_to_symbols(system, symbols)
     if swap:
         soln = nonlinsolve(system, symbols)
