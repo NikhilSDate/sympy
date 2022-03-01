@@ -1689,8 +1689,7 @@ def test_nonlinsolve_using_substitution():
 
 def test_nonlinsolve_complex():
     n = Dummy('n')
-    assert dumeq(nonlinsolve([exp(x) - sin(y), 1/y - 3], [x, y]), FiniteSet((log(sin(Rational(1, 3))), Rational(1, 3)),
-        (ImageSet(Lambda(n, 2*n*I*pi + log(sin(Rational(1, 3)))), S.Integers), Rational(1, 3))))
+    assert dumeq(nonlinsolve([exp(x) - sin(y), 1/y - 3], [x, y]), FiniteSet(ImageSet(Lambda(n, 2*n*I*pi + log(sin(Rational(1, 3)))), S.Integers), Rational(1, 3)))
 
     system = [exp(x) - sin(y), 1/exp(y) - 3]
     assert dumeq(nonlinsolve(system, [x, y]), {
