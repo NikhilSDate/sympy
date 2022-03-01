@@ -1689,7 +1689,7 @@ def test_nonlinsolve_using_substitution():
 
 def test_nonlinsolve_complex():
     n = Dummy('n')
-    assert dumeq(nonlinsolve([exp(x) - sin(y), 1/y - 3], [x, y]), FiniteSet(ImageSet(Lambda(n, 2*n*I*pi + log(sin(Rational(1, 3)))), S.Integers), Rational(1, 3)))
+    assert dumeq(nonlinsolve([exp(x) - sin(y), 1/y - 3], [x, y]), FiniteSet((ImageSet(Lambda(n, 2*n*I*pi + log(sin(Rational(1, 3)))), S.Integers), Rational(1, 3))))
 
     system = [exp(x) - sin(y), 1/exp(y) - 3]
     assert dumeq(nonlinsolve(system, [x, y]), {
@@ -1700,8 +1700,7 @@ def test_nonlinsolve_complex():
         ImageSet(Lambda(n, 2*n*I*pi - log(3)), S.Integers))})
 
     system = [exp(x) - sin(y), y**2 - 4]
-    assert dumeq(nonlinsolve(system, [x, y]), {(log(sin(2)), 2),
-        (ImageSet(Lambda(n, I*(2*n*pi + pi) + log(sin(2))), S.Integers), -2),
+    assert dumeq(nonlinsolve(system, [x, y]), {(ImageSet(Lambda(n, I*(2*n*pi + pi) + log(sin(2))), S.Integers), -2),
         (ImageSet(Lambda(n, 2*n*I*pi + log(sin(2))), S.Integers), 2)})
 
 
@@ -1850,15 +1849,12 @@ def test_issue_10876():
 
 def test_issue_19050():
     # test_issue_19050 --> TypeError removed
-    res1 = nonlinsolve([x + y, sin(y)], [x, y])
-    sol1 = FiniteSet((-2*n*pi, ImageSet(Lambda(n, 2*n*pi), S.Integers)),
-                 (-2*n*pi-pi, ImageSet(Lambda(n, 2*n*pi+pi), S.Integers)))
-    res2 = nonlinsolve([x + y, sin(y) + cos(y)], [x, y])
-    sol2 = FiniteSet(-2*n*pi-3*pi/4, ImageSet(Lambda(n, 2*n*pi + 3*pi/4), S.Integers),
-            (-2*n*pi-7*pi/4, ImageSet(Lambda(n, 2*n*pi + 7*pi/4), S.Integers)))
-
-    assert res1.func == sol1.func and dumeq(res1.args, sol1.args)
-    assert res2.func == sol2.func and dumeq(res1.args, sol1.args)
+    assert dumeq(nonlinsolve([x + y, sin(y)], [x, y]),
+        FiniteSet((ImageSet(Lambda(n, -2*n*pi), S.Integers), ImageSet(Lambda(n, 2*n*pi), S.Integers)),\
+             (ImageSet(Lambda(n, -2*n*pi - pi), S.Integers), ImageSet(Lambda(n, 2*n*pi + pi), S.Integers))))
+    assert dumeq(nonlinsolve([x + y, sin(y) + cos(y)], [x, y]),
+        FiniteSet((ImageSet(Lambda(n, -2*n*pi - 3*pi/4), S.Integers), ImageSet(Lambda(n, 2*n*pi + 3*pi/4), S.Integers)), \
+            (ImageSet(Lambda(n, -2*n*pi - 7*pi/4), S.Integers), ImageSet(Lambda(n, 2*n*pi + 7*pi/4), S.Integers))))
 
 
 def test_issue_16618():
@@ -2133,7 +2129,7 @@ def test_issue_17933():
 def test_issue_14565():
     # removed redundancy
     assert dumeq(nonlinsolve([k + m, k + m*exp(-2*pi*k)], [k, m]) ,
-        FiniteSet((0, 0), (-n*I, ImageSet(Lambda(n, n*I), S.Integers))))
+        FiniteSet((-n*I, ImageSet(Lambda(n, n*I), S.Integers))))
 
 
 # end of tests for nonlinsolve
@@ -3017,15 +3013,18 @@ def test_issue_15024():
 
 def test_issue_16877():
     assert dumeq(nonlinsolve([x - 1, sin(y)], x, y),
-                 FiniteSet((1, ImageSet(Lambda(n, 2*n*pi), S.Integers)),
-                           (1, ImageSet(Lambda(n, 2*n*pi + pi), S.Integers))))
+                 FiniteSet((FiniteSet(1), ImageSet(Lambda(n, 2*n*pi), S.Integers)),
+                           (FiniteSet(1), ImageSet(Lambda(n, 2*n*pi + pi), S.Integers))))
     # Even better if (FiniteSet(1), ImageSet(Lambda(n, n*pi), S.Integers)) is obtained
 
 
 def test_issue_16876():
-    res = nonlinsolve([sin(x), 2*x - 4*y], x, y)
-    sol = FiniteSet((2*n*pi, ImageSet(Lambda(n, n*pi), S.Integers)), (2*n*pi + pi, ImageSet(Lambda(n, n*pi + pi/2), S.Integers)))
-    assert res.func == sol.func and dumeq(res.args, sol.args)
+    def test_issue_16876():
+        assert dumeq(nonlinsolve([sin(x), 2 * x - 4 * y], x, y),
+                     FiniteSet((ImageSet(Lambda(n, 2 * n * pi), S.Integers),
+                                ImageSet(Lambda(n, n * pi), S.Integers)),
+                               (ImageSet(Lambda(n, 2 * n * pi + pi), S.Integers),
+                                ImageSet(Lambda(n, n * pi + pi / 2), S.Integers))))
     # Even better if (ImageSet(Lambda(n, n*pi), S.Integers),
     #                 ImageSet(Lambda(n, n*pi/2), S.Integers)) is obtained
 

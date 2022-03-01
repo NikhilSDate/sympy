@@ -3703,7 +3703,6 @@ def nonlinsolve(system, *symbols):
         # XXX: Maybe it is possible to choose a better ordering of the symbols
         # here like choose the symbol was highest (or lowest?) degree first...
         basis = groebner(polys, symbols, polys=False)
-
         # Does the polynomial system have a finite number of solutions?
         if basis.is_zero_dimensional:
 
@@ -3727,6 +3726,7 @@ def nonlinsolve(system, *symbols):
             # polynomial equations instead of the original system.
             poly_eqs = list(basis)
 
+    print(polys)
     # Collect together the unsolved polynomials with the non-polynomial
     # equations.
     remaining = poly_eqs + nonpolys
