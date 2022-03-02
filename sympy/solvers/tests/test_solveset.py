@@ -1689,7 +1689,8 @@ def test_nonlinsolve_using_substitution():
 
 def test_nonlinsolve_complex():
     n = Dummy('n')
-    assert dumeq(nonlinsolve([exp(x) - sin(y), 1/y - 3], [x, y]), FiniteSet((ImageSet(Lambda(n, 2*n*I*pi + log(sin(Rational(1, 3)))), S.Integers), Rational(1, 3))))
+    assert dumeq(nonlinsolve([exp(x) - sin(y), 1/y - 3], [x, y]), {
+        (ImageSet(Lambda(n, 2*n*I*pi + log(sin(Rational(1, 3)))), S.Integers), Rational(1, 3))})
 
     system = [exp(x) - sin(y), 1/exp(y) - 3]
     assert dumeq(nonlinsolve(system, [x, y]), {
@@ -1700,8 +1701,10 @@ def test_nonlinsolve_complex():
         ImageSet(Lambda(n, 2*n*I*pi - log(3)), S.Integers))})
 
     system = [exp(x) - sin(y), y**2 - 4]
-    assert dumeq(nonlinsolve(system, [x, y]), {(ImageSet(Lambda(n, I*(2*n*pi + pi) + log(sin(2))), S.Integers), -2),
+    assert dumeq(nonlinsolve(system, [x, y]), {
+        (ImageSet(Lambda(n, I*(2*n*pi + pi) + log(sin(2))), S.Integers), -2),
         (ImageSet(Lambda(n, 2*n*I*pi + log(sin(2))), S.Integers), 2)})
+
 
 
 @XFAIL
@@ -3019,12 +3022,11 @@ def test_issue_16877():
 
 
 def test_issue_16876():
-    def test_issue_16876():
-        assert dumeq(nonlinsolve([sin(x), 2 * x - 4 * y], x, y),
-                     FiniteSet((ImageSet(Lambda(n, 2 * n * pi), S.Integers),
-                                ImageSet(Lambda(n, n * pi), S.Integers)),
-                               (ImageSet(Lambda(n, 2 * n * pi + pi), S.Integers),
-                                ImageSet(Lambda(n, n * pi + pi / 2), S.Integers))))
+    assert dumeq(nonlinsolve([sin(x), 2*x - 4*y], x, y),
+                 FiniteSet((ImageSet(Lambda(n, 2*n*pi), S.Integers),
+                            ImageSet(Lambda(n, n*pi), S.Integers)),
+                           (ImageSet(Lambda(n, 2*n*pi + pi), S.Integers),
+                            ImageSet(Lambda(n, n*pi + pi/2), S.Integers))))
     # Even better if (ImageSet(Lambda(n, n*pi), S.Integers),
     #                 ImageSet(Lambda(n, n*pi/2), S.Integers)) is obtained
 
