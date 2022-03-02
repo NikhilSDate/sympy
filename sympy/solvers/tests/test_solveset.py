@@ -1553,7 +1553,7 @@ def test_nonlinsolve_basic():
 
     system = [x, y - x - 5]
     assert nonlinsolve([x],[x, y]) == FiniteSet((0, y))
-    assert nonlinsolve(system, [y]) == FiniteSet((x + 5,))
+    assert nonlinsolve(system, [y]) == S.EmptySet
     soln = (ImageSet(Lambda(n, 2*n*pi + pi/2), S.Integers),)
     assert dumeq(nonlinsolve([sin(x) - 1], [x]), FiniteSet(tuple(soln)))
     assert nonlinsolve([x**2 - 1], [x]) == FiniteSet((-1,), (1,))
