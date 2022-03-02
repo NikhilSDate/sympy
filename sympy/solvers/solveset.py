@@ -3716,7 +3716,8 @@ def nonlinsolve(system, *symbols):
             poly_syms = set().union(*(eq.free_symbols for eq in polys_expr))
             unrad_syms = set().union(*(eq.free_symbols for eq in unrad_changed))
             if unrad_syms == poly_syms and unrad_changed:
-                poly_sol = [sol for sol in poly_sol if checksol(unrad_syms, sol)]
+                # if all the symbols have been solved by _handle_poly and unrad has been used then check solutions
+                poly_sol = [sol for sol in poly_sol if checksol(unrad_changed, sol)]
         # here like choose the symbol was highest (or lowest?) degree first...
     # Collect together the unsolved polynomials with the non-polynomial
     # equations.
