@@ -3455,6 +3455,8 @@ def _separate_poly_nonpoly(system, symbols):
     polys = []
     polys_expr = []
     nonpolys = []
+    # unrad_changed stores a list of expressions containing radicals that were processed using unrad
+    # this is useful if solutions need to be checked later.
     unrad_changed = []
     denominators = set()
     poly = None
@@ -3484,12 +3486,15 @@ def _separate_poly_nonpoly(system, symbols):
     return polys, polys_expr, nonpolys, denominators, unrad_changed
 # end of def _separate_poly_nonpoly()
 
+
 def _handle_poly(polys, symbols):
     poly_sol = [{}]
     # Compute a Groebner basis in lex order wrt the ordering given by
     # symbols.
     #
     # XXX: Maybe it is possible to choose a better ordering of the symbols
+    # here like choose the symbol was highest (or lowest?) degree first...
+
     basis = groebner(polys, symbols, polys=False)
     # Does the polynomial system have a finite number of solutions?
     if basis.is_zero_dimensional:
@@ -3515,6 +3520,7 @@ def _handle_poly(polys, symbols):
         poly_eqs = list(basis)
     return poly_sol, poly_eqs
 
+
 def nonlinsolve(system, *symbols):
     r"""
     Solve system of $N$ nonlinear equations with $M$ variables, which means both
@@ -3522,8 +3528,7 @@ def nonlinsolve(system, *symbols):
     system is also supported (A system with infinitely many solutions is said
     to be positive-dimensional). In a positive dimensional system the solution will
     be dependent on at least one symbol. Returns both real solution
-    and complex solution (if they exist). The possible number of solutions
-    is zero, one or infinite.
+    and complex solution (if they exist).
 
     Parameters
     ==========
@@ -3604,8 +3609,7 @@ def nonlinsolve(system, *symbols):
 
     >>> from sympy import exp, sin
     >>> nonlinsolve([exp(x) - sin(y), y**2 - 4], [x, y])
-    {(log(sin(2)), 2),
-    (ImageSet(Lambda(_n, I*(2*_n*pi + pi) + log(sin(2))), Integers), -2),
+    {(ImageSet(Lambda(_n, I*(2*_n*pi + pi) + log(sin(2))), Integers), -2),
     (ImageSet(Lambda(_n, 2*_n*I*pi + log(sin(2))), Integers), 2)}
 
     3. If system is non-linear polynomial and zero-dimensional then it
@@ -3661,7 +3665,7 @@ def nonlinsolve(system, *symbols):
     ``substitution`` method with this polynomial and non polynomial equation(s),
     to solve for unsolved variables. Here to solve for particular variable
     solveset_real and solveset_complex is used. For both real and complex
-    solution ``_solve_using_know_values`` is used inside ``substitution``
+    solution ``_solve_using_known_values`` is used inside ``substitution``
     (``substitution`` will be called when any non-polynomial equation is present).
     If a solution is valid its general solution is added to the final result.
 
@@ -3708,24 +3712,26 @@ def nonlinsolve(system, *symbols):
     polys, polys_expr, nonpolys, denominators, unrad_changed = _separate_poly_nonpoly(system, symbols)
     poly_eqs = []
     poly_sol = [{}]
+
     if polys:
         # Convert floats to rational for polynomial calculations
         polys = [poly(nsimplify(p, rational=True)) for p in polys]
         poly_sol, poly_eqs = _handle_poly(polys, symbols)
-        if not poly_eqs:
-            poly_syms = set().union(*(eq.free_symbols for eq in polys_expr))
+        if poly_sol:
+            poly_syms = set().union(*(eq.free_symbols for eq in polys))
             unrad_syms = set().union(*(eq.free_symbols for eq in unrad_changed))
             if unrad_syms == poly_syms and unrad_changed:
                 # if all the symbols have been solved by _handle_poly and unrad has been used then check solutions
                 poly_sol = [sol for sol in poly_sol if checksol(unrad_changed, sol)]
-        # here like choose the symbol was highest (or lowest?) degree first...
+
     # Collect together the unsolved polynomials with the non-polynomial
     # equations.
     remaining = poly_eqs + nonpolys
-    # If there is nothing left to solve then return the solution from
-    # solve_poly_system directly.
     to_tuple = lambda sol: tuple(sol[s] for s in symbols)
+
     if not remaining:
+        # If there is nothing left to solve then return the solution from
+        # solve_poly_system directly.
         return FiniteSet(*map(to_tuple, poly_sol))
     else:
         # Here we handle:
@@ -3737,26 +3743,15 @@ def nonlinsolve(system, *symbols):
         # If solve_poly_system did succeed then we pass those solutions in as
         # preliminary results.
         subs_res = substitution(remaining, symbols, result=poly_sol, exclude=denominators)
+
         if not isinstance(subs_res, FiniteSet):
             return subs_res
-        result = []
-        for soln in subs_res.args:
-            result.append(dict(zip(symbols, soln)))
 
-        # check solutions produced by substitution
+        # check solutions produced by substitution. Currently, checking is done for only those solutions which have
+        # non-Set variable values.
         if unrad_changed:
-            valid_solns = []
-            for soln in result:
-                # the second of the following conditions is a hack
-                # it is required because checksol can fail in cases where nonlinsolve introduces extra dummy symbols,
-                # especially with sines and cosines
-                # so don't attempt to call checksol if the solution contains extra symbols
-                free_syms = set().union(*(val.free_symbols for val in soln.values()))
-                if any(isinstance(v, Set) for v in soln) or free_syms.difference(symbols) \
-                        or checksol(unrad_changed, soln) != False:
-                    valid_solns.append(soln)
-            if len(valid_solns) > 0:
-                return FiniteSet(*map(to_tuple, valid_solns))
-            else:
-                return S.EmptySet
-    return FiniteSet(*map(to_tuple, result))
+            result = [dict(zip(symbols, sol)) for sol in subs_res.args]
+            correct_sols = [sol for sol in result if any(isinstance(v, Set) for v in sol) or checksol(unrad_changed, sol) != False]
+            return FiniteSet(*map(to_tuple, correct_sols))
+        else:
+            return subs_res
