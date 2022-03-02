@@ -3676,8 +3676,6 @@ def nonlinsolve(system, *symbols):
     intersection for that variable is added before returning final solution.
 
     """
-    from sympy.polys.polytools import is_zero_dimensional
-
     if not system:
         return S.EmptySet
 
