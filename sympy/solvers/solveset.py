@@ -3504,15 +3504,9 @@ def _handle_poly(polys, symbols):
         #
         # XXX: Why would solve_poly_system fail and how would subsitution
         # do any better in that case?
-        try:
-            result = solve_poly_system(basis, *symbols)
-        except NotImplementedError:
-            # Use the Groebner basis instead of the original polys for
-            # further solving with substitution.
-            poly_eqs = list(basis)
-        else:
-            poly_sol = [dict(zip(symbols, res)) for res in result]
-            poly_eqs = []
+        result = solve_poly_system(basis, *symbols)
+        poly_sol = [dict(zip(symbols, res)) for res in result]
+        poly_eqs = []
     else:
         # Positive-dimensional case. We let substitution handle this but at
         # least we can give the precomputed Groebner basis form of the
