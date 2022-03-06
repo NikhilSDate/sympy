@@ -3,7 +3,7 @@
 from sympy.core import S
 from sympy.core.sorting import default_sort_key
 from sympy.polys import Poly, groebner, roots
-from sympy.polys.polytools import parallel_poly_from_expr
+from sympy.polys.polytools import parallel_poly_from_expr, degree
 from sympy.polys.polyerrors import (ComputationFailed,
     PolificationFailed, CoercionFailed)
 from sympy.simplify import rcollect
@@ -258,7 +258,15 @@ def solve_generic(polys, opt):
         gens = f.gens
         gen = gens[-1]
 
-        zeros = list(roots(f.ltrim(gen)).keys())
+        rts = roots(f.ltrim(gen))
+
+        if len(rts) < degree(f, gen):
+            raise NotImplementedError(filldedent('''
+            systems with Groebner bases having degree >= 5
+            are not currently supported
+            '''))
+
+        zeros = list(rts.keys())
 
         if not zeros:
             return []

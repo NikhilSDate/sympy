@@ -3488,7 +3488,6 @@ def _separate_poly_nonpoly(system, symbols):
 
 
 def _handle_poly(polys, symbols):
-    poly_sol = [{}]
     # Compute a Groebner basis in lex order wrt the ordering given by
     # symbols.
     #
@@ -3496,22 +3495,21 @@ def _handle_poly(polys, symbols):
     # here like choose the symbol was highest (or lowest?) degree first...
 
     basis = groebner(polys, symbols, polys=False)
+    poly_sol = [{}]
+    poly_eqs = list(basis)
     # Does the polynomial system have a finite number of solutions?
     if basis.is_zero_dimensional:
 
         # Solve the zero-dimensional case using solve_poly_system if
         # possible. Otherwise fall back on using substitution below.
-        #
-        # XXX: Why would solve_poly_system fail and how would subsitution
-        # do any better in that case?
-        result = solve_poly_system(basis, *symbols)
-        poly_sol = [dict(zip(symbols, res)) for res in result]
-        poly_eqs = []
-    else:
-        # Positive-dimensional case. We let substitution handle this but at
-        # least we can give the precomputed Groebner basis form of the
-        # polynomial equations instead of the original system.
-        poly_eqs = list(basis)
+        try:
+            result = solve_poly_system(basis, *symbols)
+            poly_sol = [dict(zip(symbols, res)) for res in result]
+            poly_eqs = []
+        except NotImplementedError:
+            # solve_poly_system will raise NotImplementedError if
+            # it knows that the solution produced is not correct
+            pass
     return poly_sol, poly_eqs
 
 
