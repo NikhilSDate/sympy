@@ -269,7 +269,7 @@ def solve_generic(polys, opt):
 
         rts = roots(f.ltrim(gen))
 
-        if len(rts) < degree(f, gen):
+        if sum(rts.values()) < degree(f, gen):
             raise NotImplementedError(filldedent('''
             only systems for which every polynomial in the Groebner basis
             has all its solutions expressible in radicals (after it is converted
