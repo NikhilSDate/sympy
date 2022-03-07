@@ -56,6 +56,7 @@ from sympy.polys.domains.integerring import ZZ
 from sympy.polys.orthopolys import legendre_poly
 from sympy.polys.partfrac import apart
 from sympy.polys.polytools import Poly, factor, gcd, resultant
+from sympy.polys.rootoftools import CRootOf
 from sympy.series.limits import limit
 from sympy.series.order import O
 from sympy.series.residues import residue
@@ -1192,12 +1193,23 @@ def test_M39():
     x, y, z = symbols('x y z', complex=True)
     # TODO: Replace solve with solveset, as of now
     # solveset doesn't supports non-linear multivariate
-    assert solve([x**2*y + 3*y*z - 4, -3*x**2*z + 2*y**2 + 1, 2*y*z**2 - z**2 - 1 ]) ==\
-            [{y: 1, z: 1, x: -1}, {y: 1, z: 1, x: 1},\
-             {y: sqrt(2)*I, z: R(1,3) - sqrt(2)*I/3, x: -sqrt(-1 - sqrt(2)*I)},\
-             {y: sqrt(2)*I, z: R(1,3) - sqrt(2)*I/3, x: sqrt(-1 - sqrt(2)*I)},\
-             {y: -sqrt(2)*I, z: R(1,3) + sqrt(2)*I/3, x: -sqrt(-1 + sqrt(2)*I)},\
-             {y: -sqrt(2)*I, z: R(1,3) + sqrt(2)*I/3, x: sqrt(-1 + sqrt(2)*I)}]
+    assert solve([x**2*y + 3*y*z - 4, -3*x**2*z + 2*y**2 + 1, 2*y*z**2 - z**2 - 1 ]) == \
+           [{y: 1, x: -1, z: 1}, {y: 1, x: 1, z: 1},
+            {y: (sqrt(2) + 4*I)/(2*sqrt(2) - I), x: 2**R(1, 4)*sqrt(3)*sqrt((-sqrt(2) - I)/(4 - sqrt(2)*I)), z: R(1, 3) - sqrt(2)*I/3},
+            {y: (sqrt(2) - 4*I)/(2*sqrt(2) + I), x: 2**R(1, 4)*sqrt(3)*sqrt((-sqrt(2) + I)/(4 + sqrt(2)*I)), z: R(1, 3) + sqrt(2)*I/3},
+            {y: (sqrt(2) + 4*I)/(2*sqrt(2) - I), x: -2**R(1, 4)*sqrt(3)*sqrt(Mul((sqrt(2) + I), -1, evaluate=False)/(4 - sqrt(2)*I)), z: R(1, 3) - sqrt(2)*I/3},
+            {y: (sqrt(2) - 4*I)/(2*sqrt(2) + I), x: -2**R(1, 4)*sqrt(3)*sqrt(Mul((sqrt(2) - I), -1, evaluate=False)/(4 + sqrt(2)*I)), z: R(1, 3) + sqrt(2)*I/3},
+            {y: 1/(2*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 0)**2) + R(1, 2), x: -sqrt(-3*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 0)**2 - 3 + 8*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 0))*sqrt(CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 0))/sqrt(1 + CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 0)**2), z: CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 0)},
+            {y: 1/(2*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 0)**2) + R(1, 2), x: sqrt(-3*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 0)**2 - 3 + 8*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 0))*sqrt(CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 0))/sqrt(1 + CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 0)**2), z: CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 0)},
+            {y: R(1, 2) + 1/(2*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 1)**2), x: sqrt((-3 + 8*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 1) - 3*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 1)**2)*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 1)/(1 + CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 1)**2)), z: CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 1)},
+            {y: R(1, 2) + 1/(2*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 2)**2), x: sqrt((-3 - 3*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 2)**2 + 8*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 2))*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 2)/(1 + CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 2)**2)), z: CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 2)},
+            {y: R(1, 2) + 1/(2*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 3)**2), x: sqrt((-3 + 8*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 3) - 3*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 3)**2)*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 3)/(1 + CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 3)**2)), z: CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 3)},
+            {y: R(1, 2) + 1/(2*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 4)**2), x: sqrt((-3 - 3*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 4)**2 + 8*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 4))*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 4)/(1 + CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 4)**2)), z: CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 4)},
+            {y: R(1, 2) + 1/(2*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 1)**2), x: -sqrt(Mul((3 + 3*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 1)**2 - 8*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 1)), -1, evaluate=False)*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 1)/(1 + CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 1)**2)), z: CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 1)},
+            {y: R(1, 2) + 1/(2*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 2)**2), x: -sqrt(Mul((3 - 8*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 2) + 3*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 2)**2), -1, evaluate=False)*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 2)/(1 + CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 2)**2)), z: CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 2)},
+            {y: R(1, 2) + 1/(2*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 3)**2), x: -sqrt(Mul((3 + 3*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 3)**2 - 8*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 3)), -1, evaluate=False)*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 3)/(1 + CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 3)**2)), z: CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 3)},
+            {y: R(1, 2) + 1/(2*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 4)**2), x: -sqrt(Mul((3 - 8*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 4) + 3*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 4)**2), -1, evaluate=False)*CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 4)/(1 + CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 4)**2)), z: CRootOf(6*x**5 - 6*x**4 - 9*x**3 - 7*x**2 - 3*x - 1, 4)}]
+
 
 # N. Inequalities
 
