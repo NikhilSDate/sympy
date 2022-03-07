@@ -863,7 +863,7 @@ def roots(f, *gens,
     {-1: 1, 1: 1}
 
     ``roots`` will only return roots expressible in radicals. If the givem polynomial has some or all of
-    its roots inexpressible in radicals, the result of roots will be incomplete or empty respectively.
+    its roots inexpressible in radicals, the result of ``roots`` will be incomplete or empty respectively.
 
     Example where result is incomplete:
 
