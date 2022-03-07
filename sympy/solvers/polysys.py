@@ -185,6 +185,15 @@ def solve_generic(polys, opt):
     .. [Cox97] D. Cox, J. Little, D. O'Shea, Ideals, Varieties
     and Algorithms, Springer, Second Edition, 1997, pp. 112
 
+    Raises
+    ========
+
+    NotImplementedError
+        The system is not zero-dimensional (does not have a finite number of solutions)
+
+        At least one polynomial in the Groebner basis does not have all its solutions expressible in
+        radicals (after it is converted to a univariate polynomial)
+
     Examples
     ========
 
@@ -262,8 +271,9 @@ def solve_generic(polys, opt):
 
         if len(rts) < degree(f, gen):
             raise NotImplementedError(filldedent('''
-            systems with Groebner bases having degree >= 5
-            are not currently supported
+            only systems for which every polynomial in the Groebner basis
+            has all its solutions expressible in radicals (after it is converted
+            to a univariate polynomial) are supported
             '''))
 
         zeros = list(rts.keys())
