@@ -3695,10 +3695,6 @@ def nonlinsolve(system, *symbols):
 
     # main code of def nonlinsolve() starts from here
 
-    # only consider equations with either no free symbols
-    # or at least free symbol in common with symbols to solve for
-    # main code of def nonlinsolve() starts from here
-
     polys, polys_expr, nonpolys, denominators, unrad_changed = _separate_poly_nonpoly(system, symbols)
     poly_eqs = []
     poly_sol = [{}]
