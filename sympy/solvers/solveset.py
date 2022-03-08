@@ -3504,12 +3504,12 @@ def _handle_poly(polys, symbols):
         # possible. Otherwise fall back on using substitution below.
         try:
             result = solve_poly_system(basis, *symbols)
-            poly_sol = [dict(zip(symbols, res)) for res in result]
-            poly_eqs = []
         except NotImplementedError:
             # solve_poly_system will raise NotImplementedError if
             # it knows that the solution produced is not correct
             pass
+        else:
+            return [dict(zip(symbols, res)) for res in result], []
     return poly_sol, poly_eqs
 
 
