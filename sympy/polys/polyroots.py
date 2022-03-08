@@ -872,17 +872,17 @@ def roots(f, *gens,
 
     Example where result is empty:
 
-    >>> roots(x**7-3*x**2+1)
+    >>> roots(x**7-3*x**2+1, x)
     {}
 
     The result produced by ``roots`` is complete if and only if the sum of the multiplicity of each root is equal to the
     degree of the polynomial. This can be checked as follows:
 
     >>> f = x**3-2*x**2+1
-    >>> sum(roots(f).values()) == degree(f, x)
+    >>> sum(roots(f, x).values()) == degree(f, x)
     True
     >>> f = (x-1)*(x**5-x+1)
-    >>> sum(roots(f).values()) == degree(f, x)
+    >>> sum(roots(f, x).values()) == degree(f, x)
     False
 
 
