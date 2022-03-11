@@ -56,7 +56,6 @@ from sympy.polys.domains.integerring import ZZ
 from sympy.polys.orthopolys import legendre_poly
 from sympy.polys.partfrac import apart
 from sympy.polys.polytools import Poly, factor, gcd, resultant
-from sympy.polys.rootoftools import CRootOf
 from sympy.series.limits import limit
 from sympy.series.order import O
 from sympy.series.residues import residue
