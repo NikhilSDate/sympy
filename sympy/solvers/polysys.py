@@ -61,6 +61,7 @@ def solve_poly_system(seq, *gens, **args):
                 return solve_biquadratic(f, g, opt)
             except SolveFailed:
                 pass
+
     return solve_generic(polys, opt, strict=strict)
 
 
