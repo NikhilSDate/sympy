@@ -47,6 +47,7 @@ def solve_poly_system(seq, *gens, **args):
     [(0, 0), (2, -sqrt(2)), (2, sqrt(2))]
 
     """
+    strict = args.pop('strict', False)
     try:
         polys, opt = parallel_poly_from_expr(seq, *gens, **args)
     except PolificationFailed as exc:
@@ -60,8 +61,7 @@ def solve_poly_system(seq, *gens, **args):
                 return solve_biquadratic(f, g, opt)
             except SolveFailed:
                 pass
-
-    return solve_generic(polys, opt)
+    return solve_generic(polys, opt, strict=strict)
 
 
 def solve_biquadratic(f, g, opt):
@@ -133,7 +133,7 @@ def solve_biquadratic(f, g, opt):
     return sorted(solutions, key=default_sort_key)
 
 
-def solve_generic(polys, opt):
+def solve_generic(polys, opt, strict=False):
     """
     Solve a generic system of polynomial equations.
 
@@ -166,7 +166,9 @@ def solve_generic(polys, opt):
         Listing all the polynomial equations that are needed to be solved
     opt: an Options object
         For specifying keyword arguments and generators
-
+    strict: a boolean
+        If strict is True, NotImplementedError will be raised if the solution
+        is known to be incomplete
     Returns
     =======
 
@@ -191,7 +193,7 @@ def solve_generic(polys, opt):
     NotImplementedError
         The system is not zero-dimensional (does not have a finite number of solutions)
 
-        At least one polynomial in the Groebner basis does not have all its solutions expressible in
+        ``strict`` is True and at least one polynomial in the Groebner basis does not have all its solutions expressible in
         radicals (after it is converted to a univariate polynomial)
 
     Examples
@@ -237,7 +239,16 @@ def solve_generic(polys, opt):
     def _solve_reduced_system(system, gens, entry=False):
         """Recursively solves reduced polynomial systems. """
         if len(system) == len(gens) == 1:
-            zeros = list(roots(system[0], gens[-1]).keys())
+            rts = roots(system[0], gens[-1])
+
+            if sum(rts.values()) < degree(system[0], gens[-1]) and strict:
+                raise NotImplementedError(filldedent('''
+                only systems for which every polynomial in the Groebner basis
+                has all its solutions expressible in radicals (after it is converted
+                to a univariate polynomial) are supported
+                '''))
+
+            zeros = list(rts.keys())
             return [(zero,) for zero in zeros]
 
         basis = groebner(system, gens, polys=True)
@@ -269,7 +280,7 @@ def solve_generic(polys, opt):
 
         rts = roots(f.ltrim(gen))
 
-        if sum(rts.values()) < degree(f, gen):
+        if sum(rts.values()) < degree(f, gen) and strict:
             raise NotImplementedError(filldedent('''
             only systems for which every polynomial in the Groebner basis
             has all its solutions expressible in radicals (after it is converted

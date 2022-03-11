@@ -3503,7 +3503,7 @@ def _handle_poly(polys, symbols):
         # Solve the zero-dimensional case using solve_poly_system if
         # possible. Otherwise fall back on using substitution below.
         try:
-            result = solve_poly_system(basis, *symbols)
+            result = solve_poly_system(basis, *symbols, strict=True)
         except NotImplementedError:
             # solve_poly_system will raise NotImplementedError if
             # it knows that the solution produced is not correct
