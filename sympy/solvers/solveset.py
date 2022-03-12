@@ -3455,7 +3455,8 @@ def _separate_poly_nonpoly(system, symbols):
     polys = []
     polys_expr = []
     nonpolys = []
-    # unrad_changed stores a list of expressions containing radicals that were processed using unrad
+    # unrad_changed stores a list of expressions containing
+    # radicals that were processed using unrad
     # this is useful if solutions need to be checked later.
     unrad_changed = []
     denominators = set()
@@ -3695,7 +3696,9 @@ def nonlinsolve(system, *symbols):
 
     # main code of def nonlinsolve() starts from here
 
-    polys, polys_expr, nonpolys, denominators, unrad_changed = _separate_poly_nonpoly(system, symbols)
+    polys, polys_expr, nonpolys, denominators, unrad_changed = \
+        _separate_poly_nonpoly(system, symbols)
+
     poly_eqs = []
     poly_sol = [{}]
 
@@ -3707,7 +3710,8 @@ def nonlinsolve(system, *symbols):
             poly_syms = set().union(*(eq.free_symbols for eq in polys))
             unrad_syms = set().union(*(eq.free_symbols for eq in unrad_changed))
             if unrad_syms == poly_syms and unrad_changed:
-                # if all the symbols have been solved by _handle_poly and unrad has been used then check solutions
+                # if all the symbols have been solved by _handle_poly
+                # and unrad has been used then check solutions
                 poly_sol = [sol for sol in poly_sol if checksol(unrad_changed, sol)]
 
     # Collect together the unsolved polynomials with the non-polynomial
@@ -3733,11 +3737,12 @@ def nonlinsolve(system, *symbols):
         if not isinstance(subs_res, FiniteSet):
             return subs_res
 
-        # check solutions produced by substitution. Currently, checking is done for only those solutions which have
-        # non-Set variable values.
+        # check solutions produced by substitution. Currently, checking is done for
+        # only those solutions which have non-Set variable values.
         if unrad_changed:
             result = [dict(zip(symbols, sol)) for sol in subs_res.args]
-            correct_sols = [sol for sol in result if any(isinstance(v, Set) for v in sol) or checksol(unrad_changed, sol) != False]
+            correct_sols = [sol for sol in result if
+                            any(isinstance(v, Set) for v in sol) or checksol(unrad_changed, sol) != False]
             return FiniteSet(*map(to_tuple, correct_sols))
         else:
             return subs_res

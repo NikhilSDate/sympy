@@ -862,8 +862,9 @@ def roots(f, *gens,
     >>> roots([1, 0, -1])
     {-1: 1, 1: 1}
 
-    ``roots`` will only return roots expressible in radicals. If the givem polynomial has some or all of
-    its roots inexpressible in radicals, the result of ``roots`` will be incomplete or empty respectively.
+    ``roots`` will only return roots expressible in radicals.
+    If the given polynomial has some or all of its roots inexpressible in radicals,
+    the result of ``roots`` will be incomplete or empty respectively.
 
     Example where result is incomplete:
 
@@ -875,7 +876,8 @@ def roots(f, *gens,
     >>> roots(x**7-3*x**2+1, x)
     {}
 
-    The result produced by ``roots`` is complete if and only if the sum of the multiplicity of each root is equal to the
+    The result produced by ``roots`` is complete if and only
+    if the sum of the multiplicity of each root is equal to the
     degree of the polynomial. This can be checked as follows:
 
     >>> f = x**3-2*x**2+1
