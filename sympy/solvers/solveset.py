@@ -3741,8 +3741,8 @@ def nonlinsolve(system, *symbols):
         # only those solutions which have non-Set variable values.
         if unrad_changed:
             result = [dict(zip(symbols, sol)) for sol in subs_res.args]
-            correct_sols = [sol for sol in result if
-                            any(isinstance(v, Set) for v in sol) or checksol(unrad_changed, sol) != False]
+            correct_sols = [sol for sol in result if any(isinstance(v, Set) for v in sol)
+                            or checksol(unrad_changed, sol) != False]
             return FiniteSet(*map(to_tuple, correct_sols))
         else:
             return subs_res
