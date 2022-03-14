@@ -28,7 +28,12 @@ def solve_poly_system(seq, *gens, **args):
         generators of the equations in seq for which we want the
         solutions
     args: Keyword arguments
-        Special options for solving the equations
+        Special options for solving the equations.
+
+        strict=True (Default: False)
+            raise NotImplementedError if the solution
+            is known to be incomplete (which can occur if all solutions
+            are not expressible in radicals)
 
     Returns
     =======
@@ -170,6 +175,7 @@ def solve_generic(polys, opt, strict=False):
     strict: a boolean
         If strict is True, NotImplementedError will be raised if the solution
         is known to be incomplete
+
     Returns
     =======
 
@@ -243,7 +249,7 @@ def solve_generic(polys, opt, strict=False):
         if len(system) == len(gens) == 1:
             rts = roots(system[0], gens[-1])
 
-            if sum(rts.values()) < degree(system[0], gens[-1]) and strict:
+            if strict and sum(rts.values()) < degree(system[0], gens[-1]):
                 raise NotImplementedError(filldedent('''
                 only systems for which every polynomial in the Groebner basis
                 has all its solutions expressible in radicals (after it is converted
@@ -282,7 +288,7 @@ def solve_generic(polys, opt, strict=False):
 
         rts = roots(f.ltrim(gen))
 
-        if sum(rts.values()) < degree(f, gen) and strict:
+        if strict and sum(rts.values()) < degree(f, gen):
             raise NotImplementedError(filldedent('''
             only systems for which every polynomial in the Groebner basis
             has all its solutions expressible in radicals (after it is converted

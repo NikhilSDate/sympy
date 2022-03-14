@@ -3506,8 +3506,9 @@ def _handle_poly(polys, symbols):
         try:
             result = solve_poly_system(basis, *symbols, strict=True)
         except NotImplementedError:
-            # solve_poly_system will raise NotImplementedError if
-            # it knows that the solution produced is not correct
+            # solve_poly_system with strict=True will raise NotImplementedError
+            # if it knows that the solution set is incomplete
+            # (which will occur if all solutions are not expressible in radicals)
             pass
         else:
             return [dict(zip(symbols, res)) for res in result], []
