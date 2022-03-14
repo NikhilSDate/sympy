@@ -30,7 +30,7 @@ def solve_poly_system(seq, *gens, **args):
     args: Keyword arguments
         Special options for solving the equations.
 
-        strict=True (Default: False)
+        strict=True (default: False)
             raise NotImplementedError if the solution
             is known to be incomplete (which can occur if all solutions
             are not expressible in radicals)
