@@ -840,9 +840,8 @@ def roots(f, *gens,
     Examples
     ========
 
-    >>> from sympy import Poly, roots
+    >>> from sympy import Poly, roots, degree
     >>> from sympy.abc import x, y
-    >>> from sympy.polys import degree
 
     >>> roots(x**2 - 1, x)
     {-1: 1, 1: 1}
@@ -862,23 +861,29 @@ def roots(f, *gens,
     >>> roots([1, 0, -1])
     {-1: 1, 1: 1}
 
-    ``roots`` will only return roots expressible in radicals.
-    If the given polynomial has some or all of its roots inexpressible in radicals,
-    the result of ``roots`` will be incomplete or empty respectively.
+    ``roots`` will only return roots expressible in radicals. If
+    the given polynomial has some or all of its roots inexpressible in
+    radicals, the result of ``roots`` will be incomplete or empty
+    respectively.
 
     Example where result is incomplete:
 
     >>> roots((x-1)*(x**5-x+1), x)
     {1: 1}
 
+    In this case, thr polynomial has a quintic factor whose roots
+    cannot be expressed by radicals. The polynomial has a rational
+    root due to the factor `(x-1)`, which is returned, since
+    ``roots`` always returns all rational roots.
+
     Example where result is empty:
 
     >>> roots(x**7-3*x**2+1, x)
     {}
 
-    The result produced by ``roots`` is complete if and only
-    if the sum of the multiplicity of each root is equal to the
-    degree of the polynomial. This can be checked as follows:
+    The result produced by ``roots`` is complete if and only if the
+    sum of the multiplicity of each root is equal to the degree of
+    the polynomial. This can be checked as follows:
 
     >>> f = x**3-2*x**2+1
     >>> sum(roots(f, x).values()) == degree(f, x)

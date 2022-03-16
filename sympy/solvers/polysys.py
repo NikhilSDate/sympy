@@ -15,7 +15,7 @@ class SolveFailed(Exception):
     """Raised when solver's conditions were not met. """
 
 
-def solve_poly_system(seq, *gens, **args):
+def solve_poly_system(seq, *gens, strict=False, **args):
     """
     Solve a system of polynomial equations.
 
@@ -27,13 +27,14 @@ def solve_poly_system(seq, *gens, **args):
     gens: generators
         generators of the equations in seq for which we want the
         solutions
+    strict: a boolean (default is False)
+        if strict is True, NotImplementedError will be raised if
+        the solution is known to be incomplete (which can occur if
+        all solutions are not expressible in radicals)
     args: Keyword arguments
         Special options for solving the equations.
 
-        strict=True (default: False)
-            raise NotImplementedError if the solution
-            is known to be incomplete (which can occur if all solutions
-            are not expressible in radicals)
+
 
     Returns
     =======
@@ -52,7 +53,6 @@ def solve_poly_system(seq, *gens, **args):
     [(0, 0), (2, -sqrt(2)), (2, sqrt(2))]
 
     """
-    strict = args.pop('strict', False)
     try:
         polys, opt = parallel_poly_from_expr(seq, *gens, **args)
     except PolificationFailed as exc:
@@ -198,11 +198,12 @@ def solve_generic(polys, opt, strict=False):
     ========
 
     NotImplementedError
-        The system is not zero-dimensional (does not have a finite number of solutions)
+        If the system is not zero-dimensional. (does not have a finite
+        number of solutions)
 
-        ``strict`` is True and at least one polynomial in the Groebner basis does not
-        have all its solutions expressible in radicals (after it is converted to a
-        univariate polynomial)
+        If ``strict`` is True and at least one polynomial in the
+        Groebner basis does not have all its solutions expressible in
+        radicals. (after it is converted to a univariate polynomial)
 
     Examples
     ========
@@ -251,10 +252,13 @@ def solve_generic(polys, opt, strict=False):
 
             if strict and sum(rts.values()) < degree(system[0], gens[-1]):
                 raise NotImplementedError(filldedent('''
-                only systems for which every polynomial in the Groebner basis
-                has all its solutions expressible in radicals (after it is converted
-                to a univariate polynomial) are supported
-                '''))
+                    Strict mode: some solution components cannot be
+                    expressed in radicals, so a complete list of
+                    solutions cannot be returned. Call
+                    solve_poly_system with strict=False to get a list
+                    of solutions expressible in radicals solutions
+                    (if there are any).
+                    '''))
 
             zeros = list(rts.keys())
             return [(zero,) for zero in zeros]
@@ -290,10 +294,12 @@ def solve_generic(polys, opt, strict=False):
 
         if strict and sum(rts.values()) < degree(f, gen):
             raise NotImplementedError(filldedent('''
-            only systems for which every polynomial in the Groebner basis
-            has all its solutions expressible in radicals (after it is converted
-            to a univariate polynomial) are supported
-            '''))
+                Strict mode: some solution components cannot be
+                expressed in radicals, so a complete list of solutions
+                cannot be returned. Call solve_poly_system with
+                strict=False to get a list of solutions expressible in
+                radicals solutions (if there are any).
+                '''))
 
         zeros = list(rts.keys())
 
