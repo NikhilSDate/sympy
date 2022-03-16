@@ -24,6 +24,7 @@ from sympy.core.sorting import default_sort_key, ordered
 from sympy.core.symbol import Symbol, _uniquely_named_symbol
 from sympy.core.sympify import _sympify
 from sympy.core.traversal import iterfreeargs
+from sympy.polys.polyroots import UnsolvableFactorError
 from sympy.simplify.simplify import simplify, fraction, trigsimp, nsimplify
 from sympy.simplify import powdenest, logcombine
 from sympy.functions import (log, tan, cot, sin, cos, sec, csc, exp,
@@ -3505,7 +3506,7 @@ def _handle_poly(polys, symbols):
         # possible. Otherwise fall back on using substitution below.
         try:
             result = solve_poly_system(basis, *symbols, strict=True)
-        except NotImplementedError:
+        except UnsolvableFactorError:
             # solve_poly_system with strict=True will raise NotImplementedError
             # if it knows that the solution set is incomplete
             # (which can occur if not all solutions are expressible in radicals)

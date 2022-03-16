@@ -22,10 +22,18 @@ from sympy.polys.domains import EX
 from sympy.polys.polyerrors import (PolynomialError, GeneratorsNeeded,
     DomainError)
 from sympy.polys.polyquinticconst import PolyQuintic
-from sympy.polys.polytools import Poly, cancel, factor, gcd_list, discriminant
+from sympy.polys.polytools import Poly, cancel, factor, gcd_list, \
+    discriminant
 from sympy.polys.rationaltools import together
 from sympy.polys.specialpolys import cyclotomic_poly
 from sympy.utilities import public
+from sympy.utilities.misc import filldedent
+
+
+class UnsolvableFactorError(Exception):
+    """Raised if ``roots`` is called with strict=True and a polynomial
+     having a factor whose solutions are not expressible in radicals
+     is encountered."""
 
 
 def roots_linear(f):
@@ -808,6 +816,7 @@ def roots(f, *gens,
         multiple=False,
         filter=None,
         predicate=None,
+        strict=False,
         **flags):
     """
     Computes symbolic roots of a univariate polynomial.
@@ -836,6 +845,10 @@ def roots(f, *gens,
     have identical roots appearing next to each other in the result.
     (For a given Poly, the all_roots method will give the roots in
     sorted numerical order.)
+
+    If the ``strict`` flag is True, ``UnsolvableFactorError`` will be
+    raised if the roots found are known to be incomplete. (because
+    some roots are not expressible in radicals)
 
     Examples
     ========
@@ -1127,6 +1140,15 @@ def roots(f, *gens,
 
     # adding zero roots after non-trivial roots have been translated
     result.update(zeros)
+
+    if strict and sum(result.values()) < f.degree():
+        raise UnsolvableFactorError(filldedent('''
+            Strict mode: some solution components cannot be
+            expressed in radicals, so a complete list of solutions
+            cannot be returned. Call roots with
+            strict=False to get solutions expressible in
+            radicals (if there are any).
+            '''))
 
     if not multiple:
         return result

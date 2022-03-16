@@ -15,12 +15,6 @@ class SolveFailed(Exception):
     """Raised when solver's conditions were not met. """
 
 
-class UnsolvableFactorError(Exception):
-    """Raised if ``solve_poly_system`` or ``solve_generic``  is called
-    with strict=True and a polynomial having a factor whose solutions
-    are not expressible in radicals is encountered."""
-
-
 def solve_poly_system(seq, *gens, strict=False, **args):
     """
     Solve a system of polynomial equations.
@@ -255,18 +249,7 @@ def solve_generic(polys, opt, strict=False):
     def _solve_reduced_system(system, gens, entry=False):
         """Recursively solves reduced polynomial systems. """
         if len(system) == len(gens) == 1:
-            rts = roots(system[0], gens[-1])
-
-            if strict and sum(rts.values()) < degree(system[0], gens[-1]):
-                raise UnsolvableFactorError(filldedent('''
-                    Strict mode: some solution components cannot be
-                    expressed in radicals, so a complete list of
-                    solutions cannot be returned. Call
-                    solve_poly_system with strict=False to get a list
-                    of solutions expressible in radicals solutions
-                    (if there are any).
-                    '''))
-
+            rts = roots(system[0], gens[-1], strict=strict)
             zeros = list(rts.keys())
             return [(zero,) for zero in zeros]
 
@@ -297,16 +280,7 @@ def solve_generic(polys, opt, strict=False):
         gens = f.gens
         gen = gens[-1]
 
-        rts = roots(f.ltrim(gen))
-
-        if strict and sum(rts.values()) < degree(f, gen):
-            raise UnsolvableFactorError(filldedent('''
-                Strict mode: some solution components cannot be
-                expressed in radicals, so a complete list of solutions
-                cannot be returned. Call solve_poly_system with
-                strict=False to get a list of solutions expressible in
-                radicals solutions (if there are any).
-                '''))
+        rts = roots(f.ltrim(gen), strict=strict)
 
         zeros = list(rts.keys())
 
