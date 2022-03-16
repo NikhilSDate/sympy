@@ -871,10 +871,10 @@ def roots(f, *gens,
     >>> roots((x-1)*(x**5-x+1), x)
     {1: 1}
 
-    In this case, the polynomial has a quintic factor whose roots
-    cannot be expressed by radicals. The polynomial has a rational
-    root due to the factor `(x-1)`, which is returned, since
-    ``roots`` always returns all rational roots.
+    In this case, the polynomial has an unsolvable quintic factor
+    whose roots cannot be expressed by radicals. The polynomial has a
+    rational root (due to the factor `(x-1)`), which is returned since
+    ``roots`` always finds all rational roots.
 
     Example where result is empty:
 
@@ -882,7 +882,7 @@ def roots(f, *gens,
     {}
 
     Here, the polynomial has no roots expressible in radicals, so
-    ``roots`` returns an empty dictionary
+    ``roots`` returns an empty dictionary.
 
     The result produced by ``roots`` is complete if and only if the
     sum of the multiplicity of each root is equal to the degree of
