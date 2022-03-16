@@ -15,6 +15,12 @@ class SolveFailed(Exception):
     """Raised when solver's conditions were not met. """
 
 
+class UnsolvableFactorError(Exception):
+    """Raised if ``solve_poly_system`` or ``solve_generic``  is called
+    with strict=True and a polynomial having a factor whose solutions
+    are not expressible in radicals is encountered."""
+
+
 def solve_poly_system(seq, *gens, strict=False, **args):
     """
     Solve a system of polynomial equations.
@@ -201,6 +207,7 @@ def solve_generic(polys, opt, strict=False):
         If the system is not zero-dimensional. (does not have a finite
         number of solutions)
 
+    UnsolvableFactorError
         If ``strict`` is True and at least one polynomial in the
         Groebner basis does not have all its solutions expressible in
         radicals. (after it is converted to a univariate polynomial)
@@ -251,7 +258,7 @@ def solve_generic(polys, opt, strict=False):
             rts = roots(system[0], gens[-1])
 
             if strict and sum(rts.values()) < degree(system[0], gens[-1]):
-                raise NotImplementedError(filldedent('''
+                raise UnsolvableFactorError(filldedent('''
                     Strict mode: some solution components cannot be
                     expressed in radicals, so a complete list of
                     solutions cannot be returned. Call
@@ -293,7 +300,7 @@ def solve_generic(polys, opt, strict=False):
         rts = roots(f.ltrim(gen))
 
         if strict and sum(rts.values()) < degree(f, gen):
-            raise NotImplementedError(filldedent('''
+            raise UnsolvableFactorError(filldedent('''
                 Strict mode: some solution components cannot be
                 expressed in radicals, so a complete list of solutions
                 cannot be returned. Call solve_poly_system with
