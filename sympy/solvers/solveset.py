@@ -3719,6 +3719,8 @@ def nonlinsolve(system, *symbols):
     # equations.
     remaining = poly_eqs + nonpolys
 
+    # to_tuple converts a solution dictionary to a tuple containing the
+    # value for each symbol
     to_tuple = lambda sol: tuple(sol[s] for s in symbols)
 
     if not remaining:
