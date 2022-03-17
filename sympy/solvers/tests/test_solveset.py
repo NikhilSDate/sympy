@@ -1709,7 +1709,6 @@ def test_nonlinsolve_complex():
         (ImageSet(Lambda(n, 2*n*I*pi + log(sin(2))), S.Integers), 2)})
 
 
-
 @XFAIL
 def test_solve_nonlinear_trans():
     # After the transcendental equation solver these will work
