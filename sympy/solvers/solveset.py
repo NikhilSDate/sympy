@@ -3496,7 +3496,7 @@ def _handle_poly(polys, symbols):
     # XXX: Maybe it is possible to choose a better ordering of the symbols
     # here like choose the symbol was highest (or lowest?) degree first...
 
-    basis = groebner(polys, symbols, polys=False)
+    basis = groebner(polys, symbols, polys=False, order='grevlex').fglm('lex')
     poly_sol = [{}]
     poly_eqs = list(basis)
     # Does the polynomial system have a finite number of solutions?

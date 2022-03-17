@@ -20,7 +20,7 @@ from sympy.functions.elementary.miscellaneous import root, sqrt
 from sympy.ntheory import divisors, isprime, nextprime
 from sympy.polys.domains import EX
 from sympy.polys.polyerrors import (PolynomialError, GeneratorsNeeded,
-    DomainError)
+    DomainError, UnsolvableFactorError)
 from sympy.polys.polyquinticconst import PolyQuintic
 from sympy.polys.polytools import Poly, cancel, factor, gcd_list, \
     discriminant
@@ -28,12 +28,6 @@ from sympy.polys.rationaltools import together
 from sympy.polys.specialpolys import cyclotomic_poly
 from sympy.utilities import public
 from sympy.utilities.misc import filldedent
-
-
-class UnsolvableFactorError(Exception):
-    """Raised if ``roots`` is called with strict=True and a polynomial
-     having a factor whose solutions are not expressible in radicals
-     is encountered."""
 
 
 def roots_linear(f):
@@ -847,8 +841,8 @@ def roots(f, *gens,
     sorted numerical order.)
 
     If the ``strict`` flag is True, ``UnsolvableFactorError`` will be
-    raised if the roots found are known to be incomplete. (because
-    some roots are not expressible in radicals)
+    raised if the roots found are known to be incomplete (because
+    some roots are not expressible in radicals).
 
     Examples
     ========
@@ -899,7 +893,10 @@ def roots(f, *gens,
 
     The result produced by ``roots`` is complete if and only if the
     sum of the multiplicity of each root is equal to the degree of
-    the polynomial. This can be checked as follows:
+    the polynomial. If strict=True, UnsolvableFactorError if the
+    result is incomplete.
+
+    The result can be be checked for completeness as follows:
 
     >>> f = x**3-2*x**2+1
     >>> sum(roots(f, x).values()) == degree(f, x)
@@ -1143,10 +1140,9 @@ def roots(f, *gens,
 
     if strict and sum(result.values()) < f.degree():
         raise UnsolvableFactorError(filldedent('''
-            Strict mode: some solution components cannot be
-            expressed in radicals, so a complete list of solutions
-            cannot be returned. Call roots with
-            strict=False to get solutions expressible in
+            Strict mode: some factors cannot be solved in radicals, so
+            a complete list of solutions cannot be returned. Call
+            roots with strict=False to get solutions expressible in
             radicals (if there are any).
             '''))
 

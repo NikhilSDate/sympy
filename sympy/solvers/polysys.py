@@ -30,7 +30,7 @@ def solve_poly_system(seq, *gens, strict=False, **args):
     strict: a boolean (default is False)
         if strict is True, NotImplementedError will be raised if
         the solution is known to be incomplete (which can occur if
-        all solutions are not expressible in radicals)
+        not all solutions are expressible in radicals)
     args: Keyword arguments
         Special options for solving the equations.
 
@@ -51,6 +51,11 @@ def solve_poly_system(seq, *gens, strict=False, **args):
 
     >>> solve_poly_system([x*y - 2*y, 2*y**2 - x**2], x, y)
     [(0, 0), (2, -sqrt(2)), (2, sqrt(2))]
+
+    >>> solve_poly_system([x**5-x+y**3, y**2-1], x, y, strict=True)
+    Traceback (most recent call last):
+    ...
+    UnsolvableFactorError
 
     """
     try:
@@ -202,9 +207,8 @@ def solve_generic(polys, opt, strict=False):
         number of solutions)
 
     UnsolvableFactorError
-        If ``strict`` is True and at least one polynomial in the
-        Groebner basis does not have all its solutions expressible in
-        radicals. (after it is converted to a univariate polynomial)
+        If ``strict`` is True and not all solution components are
+        expressible in radicals
 
     Examples
     ========
@@ -228,6 +232,14 @@ def solve_generic(polys, opt, strict=False):
     >>> b = Poly(x + y*4, x, y, domain='ZZ')
     >>> solve_generic([a, b], NewOption)
     [(0, 0), (1/4, -1/16)]
+
+    >>> a = Poly(x**5-x+y**3, x, y, domain='ZZ')
+    >>> b = Poly(y**2-1, x, y, domain='ZZ')
+    >>> solve_generic([a, b], NewOption)
+    Traceback (most recent call last):
+    ...
+    UnsolvableFactorError
+
     """
     def _is_univariate(f):
         """Returns True if 'f' is univariate in its last variable. """
