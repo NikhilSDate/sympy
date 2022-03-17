@@ -3490,13 +3490,14 @@ def _separate_poly_nonpoly(system, symbols):
 
 def _handle_poly(polys, symbols):
     # Compute a Groebner basis in grevlex order wrt the ordering given
-    # by symbols and convert it to a Groebner basis in lex order.
 
-    basis = groebner(polys, symbols, polys=False, order='grevlex').fglm('lex')
+    basis = groebner(polys, symbols, polys=False, order='grevlex')
     poly_sol = [{}]
     poly_eqs = list(basis)
     # Does the polynomial system have a finite number of solutions?
     if basis.is_zero_dimensional:
+        # Convert Groebner basis to lex ordering
+        basis = basis.fglm('lex')
 
         # Solve the zero-dimensional case using solve_poly_system if
         # possible. Otherwise fall back on using substitution below.

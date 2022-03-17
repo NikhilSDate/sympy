@@ -235,7 +235,7 @@ def solve_generic(polys, opt, strict=False):
 
     >>> a = Poly(x**5 - x + y**3, x, y, domain='ZZ')
     >>> b = Poly(y**2 - 1, x, y, domain='ZZ')
-    >>> solve_generic([a, b], NewOption)
+    >>> solve_generic([a, b], NewOption, strict=True)
     Traceback (most recent call last):
     ...
     UnsolvableFactorError
