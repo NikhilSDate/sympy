@@ -3493,7 +3493,7 @@ def _handle_poly(polys, symbols):
 
     basis = groebner(polys, symbols, polys=False, order='grevlex')
     poly_sol = [{}]
-    poly_eqs = list(groebner(polys, symbols, polys=False))
+
     # Does the polynomial system have a finite number of solutions?
     if basis.is_zero_dimensional:
         # Convert Groebner basis to lex ordering
@@ -3510,6 +3510,8 @@ def _handle_poly(polys, symbols):
             pass
         else:
             return [dict(zip(symbols, res)) for res in result], []
+
+    poly_eqs = list(groebner(polys, symbols, polys=False))
     return poly_sol, poly_eqs
 
 
