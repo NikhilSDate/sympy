@@ -3490,11 +3490,8 @@ def _separate_poly_nonpoly(system, symbols):
 
 
 def _handle_poly(polys, symbols):
-    # Compute a Groebner basis in lex order wrt the ordering given by
-    # symbols.
-    #
-    # XXX: Maybe it is possible to choose a better ordering of the symbols
-    # here like choose the symbol was highest (or lowest?) degree first...
+    # Compute a Groebner basis in grevlex order wrt the ordering given
+    # by symbols and convert it to a Groebner basis in lex order.
 
     basis = groebner(polys, symbols, polys=False, order='grevlex').fglm('lex')
     poly_sol = [{}]
