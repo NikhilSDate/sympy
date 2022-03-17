@@ -3356,7 +3356,6 @@ def substitution(system, symbols, result=[{}], known_symbols=[],
     total_conditionset += (cnd_call1 + cnd_call2)
     total_solveset_call += (solve_call1 + solve_call2)
 
-
     if total_conditionset == total_solveset_call and total_solveset_call != -1:
         return _return_conditionset(eqs_in_better_order, all_symbols)
 
@@ -3602,7 +3601,7 @@ def nonlinsolve(system, *symbols):
     >>> from sympy import exp, sin
     >>> nonlinsolve([exp(x) - sin(y), y**2 - 4], [x, y])
     {(ImageSet(Lambda(_n, I*(2*_n*pi + pi) + log(sin(2))), Integers), -2),
-    (ImageSet(Lambda(_n, 2*_n*I*pi + log(sin(2))), Integers), 2)}
+     (ImageSet(Lambda(_n, 2*_n*I*pi + log(sin(2))), Integers), 2)}
 
     3. If system is non-linear polynomial and zero-dimensional then it
     returns both solution (real and complex solutions, if present) using
@@ -3702,7 +3701,7 @@ def nonlinsolve(system, *symbols):
     poly_sol = [{}]
 
     if polys:
-        # Convert floats to rational for polynomial calculations
+        # Convert floats to Rational for polynomial calculations
         polys = [poly(nsimplify(p, rational=True)) for p in polys]
         poly_sol, poly_eqs = _handle_poly(polys, symbols)
         if poly_sol:
@@ -3716,6 +3715,7 @@ def nonlinsolve(system, *symbols):
     # Collect together the unsolved polynomials with the non-polynomial
     # equations.
     remaining = poly_eqs + nonpolys
+
     to_tuple = lambda sol: tuple(sol[s] for s in symbols)
 
     if not remaining:

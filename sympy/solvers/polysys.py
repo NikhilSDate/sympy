@@ -261,8 +261,9 @@ def solve_generic(polys, opt, strict=False):
     def _solve_reduced_system(system, gens, entry=False):
         """Recursively solves reduced polynomial systems. """
         if len(system) == len(gens) == 1:
-            rts = roots(system[0], gens[-1], strict=strict)
-            zeros = list(rts.keys())
+            # the below line will produce UnsolvableFactorError if
+            # strict=True and the produced by roots is incomplete
+            zeros = list(roots(system[0], gens[-1], strict=strict).keys())
             return [(zero,) for zero in zeros]
 
         basis = groebner(system, gens, polys=True)
@@ -292,9 +293,9 @@ def solve_generic(polys, opt, strict=False):
         gens = f.gens
         gen = gens[-1]
 
-        rts = roots(f.ltrim(gen), strict=strict)
-
-        zeros = list(rts.keys())
+        # the below line will produce UnsolvableFactorError if
+        # strict=True and the produced by roots is incomplete
+        zeros = list(roots(f.ltrim(gen), strict=strict).keys())
 
         if not zeros:
             return []
