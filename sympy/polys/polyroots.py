@@ -22,8 +22,7 @@ from sympy.polys.domains import EX
 from sympy.polys.polyerrors import (PolynomialError, GeneratorsNeeded,
     DomainError, UnsolvableFactorError)
 from sympy.polys.polyquinticconst import PolyQuintic
-from sympy.polys.polytools import Poly, cancel, factor, gcd_list, \
-    discriminant
+from sympy.polys.polytools import Poly, cancel, factor, gcd_list, discriminant
 from sympy.polys.rationaltools import together
 from sympy.polys.specialpolys import cyclotomic_poly
 from sympy.utilities import public
@@ -893,8 +892,8 @@ def roots(f, *gens,
 
     The result produced by ``roots`` is complete if and only if the
     sum of the multiplicity of each root is equal to the degree of
-    the polynomial. If strict=True, UnsolvableFactorError if the
-    result is incomplete.
+    the polynomial. If strict=True, UnsolvableFactorError will be
+    raised if the result is incomplete.
 
     The result can be be checked for completeness as follows:
 

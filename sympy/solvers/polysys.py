@@ -52,7 +52,7 @@ def solve_poly_system(seq, *gens, strict=False, **args):
     >>> solve_poly_system([x*y - 2*y, 2*y**2 - x**2], x, y)
     [(0, 0), (2, -sqrt(2)), (2, sqrt(2))]
 
-    >>> solve_poly_system([x**5-x+y**3, y**2-1], x, y, strict=True)
+    >>> solve_poly_system([x**5 - x + y**3, y**2 - 1], x, y, strict=True)
     Traceback (most recent call last):
     ...
     UnsolvableFactorError
@@ -233,8 +233,8 @@ def solve_generic(polys, opt, strict=False):
     >>> solve_generic([a, b], NewOption)
     [(0, 0), (1/4, -1/16)]
 
-    >>> a = Poly(x**5-x+y**3, x, y, domain='ZZ')
-    >>> b = Poly(y**2-1, x, y, domain='ZZ')
+    >>> a = Poly(x**5 - x + y**3, x, y, domain='ZZ')
+    >>> b = Poly(y**2 - 1, x, y, domain='ZZ')
     >>> solve_generic([a, b], NewOption)
     Traceback (most recent call last):
     ...
