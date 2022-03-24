@@ -2043,6 +2043,32 @@ def test_substitution_basic():
         {x + 1}, [y, x]) == S.EmptySet
 
 
+def test_substitution_incorrect():
+    # the solutions in the following two test are incorrect. The
+    # correct result is EmptySet in both cases.
+    assert substitution([h - 1, k - 1, f - 2, f - 4, -2 * k],
+                        [h, k, f]) == {(1, 1, f)}
+    assert substitution([x + y + z, S.One, S.One, S.One], [x, y, z]) == \
+                        {(-y - z, y, z)}
+
+    # the correct result in the below test is {(-I, I, I, -I),
+    # (I, -I, -I, I)}
+    assert substitution([a - d, b + d, c + d, d ** 2 + 1], [a, b, c, d]) == \
+                        {(d, -d, -d, d)}
+
+
+def test_substitution_redundant():
+    # the second and third solutions are redundant in the test below
+    assert substitution([x ** 2 - y ** 2, z - 1], [x, z]) == \
+           {(-y, 1), (y, 1), (-sqrt(y ** 2), 1), (sqrt(y ** 2), 1)}
+
+    # the first solution is redundant in the test below
+    assert substitution([a*(a - log(b)), a*(b-2)], [a, b]) == \
+           {(0, 2), (0, b), (log(2), 2)}
+
+
+
+
 def test_issue_5132_substitution():
     x, y, z, r, t = symbols('x, y, z, r, t', real=True)
     system = [r - x**2 - y**2, tan(t) - y/x]

@@ -5,6 +5,7 @@ from sympy.core.singleton import S
 from sympy.core.symbol import symbols
 from sympy.functions.elementary.miscellaneous import sqrt
 from sympy.polys.domains.rationalfield import QQ
+from sympy.polys.polyerrors import UnsolvableFactorError
 from sympy.polys.polytools import Poly
 from sympy.solvers.solvers import solve
 from sympy.utilities.iterables import flatten
@@ -59,6 +60,18 @@ def test_solve_poly_system():
           [x-1,], (x, y)))
     raises(NotImplementedError, lambda: solve_poly_system(
           [y-1,], (x, y)))
+
+    # ideally solve_poly_system should construct solutions using
+    # CRootOf for the below test
+    assert solve_poly_system([x**5 - x + 1], [x], strict=False) == []
+    raises(UnsolvableFactorError, solve_poly_system([x**5 - x + 1],
+                                                    [x], strict=True))
+
+    assert solve_poly_system([(x-1)*(x ** 5 - x + 1), y**2-1], [x, y],
+                             strict=False) == [(1, -1), (1, 1)]
+    raises(UnsolvableFactorError,
+           solve_poly_system([(x-1)*(x ** 5 - x + 1), y**2-1], [x],
+                             strict=True))
 
 
 def test_solve_biquadratic():
