@@ -1638,7 +1638,8 @@ def test_nonlinsolve_positive_dimensional():
     soln = FiniteSet(sol1, sol2)
     assert nonlinsolve(system, [a, b, c, d]) == soln
 
-    assert nonlinsolve([x**4-3*x**2+y*x, x*z**2, y*z-1]) == {(0, 1 / z, z)}
+    assert nonlinsolve([x**4-3*x**2+y*x, x*z**2, y*z-1], [x, y, z]) == \
+           {(0, 1 / z, z)}
 
 
 def test_nonlinsolve_polysys():
