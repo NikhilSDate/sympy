@@ -3509,7 +3509,10 @@ def _handle_poly(polys, symbols):
             # (which can occur if not all solutions are expressible in radicals)
             pass
         else:
-            return [dict(zip(symbols, res)) for res in result], []
+            if result:
+                return [dict(zip(symbols, res)) for res in result], []
+            else:
+                return [{}]
     if 1 not in poly_eqs:
         poly_eqs = list(groebner(polys, symbols, polys=False))
     return poly_sol, poly_eqs
@@ -3707,7 +3710,7 @@ def nonlinsolve(system, *symbols):
         # Convert floats to Rational for polynomial calculations
         polys = [poly(nsimplify(p, rational=True)) for p in polys]
         poly_sol, poly_eqs = _handle_poly(polys, symbols)
-        if poly_sol:
+        if poly_sol[0]:
             poly_syms = set().union(*(eq.free_symbols for eq in polys))
             unrad_syms = set().union(*(eq.free_symbols for eq in unrad_changed))
             if unrad_syms == poly_syms and unrad_changed:

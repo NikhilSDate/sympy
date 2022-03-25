@@ -1638,6 +1638,8 @@ def test_nonlinsolve_positive_dimensional():
     soln = FiniteSet(sol1, sol2)
     assert nonlinsolve(system, [a, b, c, d]) == soln
 
+    assert nonlinsolve([x**4-3*x**2+y*x, x*z**2, y*z-1]) == {(0, 1 / z, z)}
+
 
 def test_nonlinsolve_polysys():
     x, y, z = symbols('x, y, z', real=True)
@@ -1707,6 +1709,10 @@ def test_nonlinsolve_complex():
     assert dumeq(nonlinsolve(system, [x, y]), {
         (ImageSet(Lambda(n, I*(2*n*pi + pi) + log(sin(2))), S.Integers), -2),
         (ImageSet(Lambda(n, 2*n*I*pi + log(sin(2))), S.Integers), 2)})
+
+
+def test_nonlinsolve_radical():
+    assert nonlinsolve([sqrt(y) - x - z, y - 1], [x, y, z]) == {(1 - z, 1, z)}
 
 
 @XFAIL
