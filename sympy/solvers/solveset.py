@@ -3258,6 +3258,10 @@ def substitution(system, symbols, result=[{}], known_symbols=[],
                     not_solvable = False
                     try:
                         soln = solver(eq2, sym)
+
+                        if soln is S.EmptySet:
+                            return [], total_solvest_call, total_conditionst
+
                         total_solvest_call += 1
                         soln_new = S.EmptySet
                         if isinstance(soln, Complement):
@@ -3274,11 +3278,6 @@ def substitution(system, symbols, result=[{}], known_symbols=[],
                                 intersections[sym] = soln.args[0]
                             soln_new += soln.args[1]
                         soln = soln_new if soln_new else soln
-                        if index > 0 and solver == solveset_real:
-                            # one symbol's real soln, another symbol may have
-                            # corresponding complex soln.
-                            if not isinstance(soln, (ImageSet, ConditionSet)):
-                                soln += solveset_complex(eq2, sym)  # might give ValueError with Abs
                     except (NotImplementedError, ValueError):
                         # If solveset is not able to solve equation `eq2`. Next
                         # time we may get soln using next equation `eq2`
@@ -3391,11 +3390,6 @@ def substitution(system, symbols, result=[{}], known_symbols=[],
         if res not in result_all_variables:
             result_all_variables.append(res)
 
-    if result_infinite:
-        # we have general soln
-        # eg : [{x: -1, y : 1}, {x : -y, y: y}] then
-        # return [{x : -y, y : y}]
-        result_all_variables = result_infinite
     if intersections or complements:
         result_all_variables = add_intersection_complement(
             result_all_variables, intersections, complements)
