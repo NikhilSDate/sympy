@@ -66,14 +66,14 @@ def test_solve_poly_system():
     # solve_poly_system should ideally construct solutions using
     # CRootOf for the test below
     assert solve_poly_system([x**5 - x + 1], [x], strict=False) == []
-    raises(UnsolvableFactorError, solve_poly_system([x**5 - x + 1],
-                                                    [x], strict=True))
+    raises(UnsolvableFactorError, lambda: solve_poly_system(
+        [x**5 - x + 1], [x], strict=True))
 
     assert solve_poly_system([(x-1)*(x ** 5 - x + 1), y**2-1], [x, y],
                              strict=False) == [(1, -1), (1, 1)]
     raises(UnsolvableFactorError,
-           solve_poly_system([(x-1)*(x ** 5 - x + 1), y**2-1], [x, y],
-                             strict=True))
+           lambda: solve_poly_system([(x-1)*(x ** 5 - x + 1), y**2-1],
+                                     [x, y], strict=True))
 
 
 def test_solve_generic():
