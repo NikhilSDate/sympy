@@ -2051,10 +2051,21 @@ def test_substitution_incorrect():
     assert substitution([x + y + z, S.One, S.One, S.One], [x, y, z]) == \
                         {(-y - z, y, z)}
 
-    # the correct result in the below test is {(-I, I, I, -I),
+    # the correct result in the test below is {(-I, I, I, -I),
     # (I, -I, -I, I)}
     assert substitution([a - d, b + d, c + d, d ** 2 + 1], [a, b, c, d]) == \
                         {(d, -d, -d, d)}
+
+    # the result in the test below is incomplete. The complete result is
+    # {(0, b), (log(2), 2)}
+    assert substitution([a * (a - log(b)), a * (b - 2)], [a, b]) == \
+           {(0, b)}
+
+    # The system in the example below is zero-dimensional, so the result
+    # should have no free symbols
+    assert substitution([-k*y + 6*x - 4*y, -81*k + 49*y**2 - 270,
+                         -3*k*z + k + z**3, k**2 - 2*k + 4],
+                        [x, y, z, k]).free_symbols == {z}
 
 
 def test_substitution_redundant():
@@ -2062,9 +2073,10 @@ def test_substitution_redundant():
     assert substitution([x ** 2 - y ** 2, z - 1], [x, z]) == \
            {(-y, 1), (y, 1), (-sqrt(y ** 2), 1), (sqrt(y ** 2), 1)}
 
-    # the first solution is redundant in the test below
-    assert substitution([a*(a - log(b)), a*(b-2)], [a, b]) == \
-           {(0, 2), (0, b), (log(2), 2)}
+    # the system below has three solutions. Two of the solutions produced
+    # by substitution are redundant.
+    assert len(substitution([x - y, y**3 - 3*y**2 + 1], [x, y])) == 5
+
 
 
 
@@ -2955,7 +2967,7 @@ def test_issue_18208():
 
     assert nonlinsolve(eqs, variables) == nonlinsolve_expected
 
-@XFAIL
+
 def test_substitution_with_infeasible_solution():
     a00, a01, a10, a11, l0, l1, l2, l3, m0, m1, m2, m3, m4, m5, m6, m7, c00, c01, c10, c11, p00, p01, p10, p11 = symbols(
         'a00, a01, a10, a11, l0, l1, l2, l3, m0, m1, m2, m3, m4, m5, m6, m7, c00, c01, c10, c11, p00, p01, p10, p11'
