@@ -1670,7 +1670,7 @@ def test_nonlinsolve_polysys():
     system = [-x**2*z**2 + x*y*z + y**4, -2*x*z**2 + y*z, x*z + 4*y**3, -2*x**2*z + x*y]
     assert nonlinsolve(system, [x, y, z]) == FiniteSet((0, 0, z), (x, 0, 0))
 
-    assert nonlinsolve([(x + y) ** 2 - 9, x ** 2 - y ** 2 - 0.75], (x, y)) == FiniteSet(
+    assert nonlinsolve([(x + y)**2 - 9, x**2 - y**2 - 0.75], (x, y)) == FiniteSet(
         (Rational(-13, 8), Rational(-11, 8)), (Rational(13, 8), Rational(11, 8)))
 
 
@@ -2083,9 +2083,6 @@ def test_substitution_redundant():
     # the system below has three solutions. Two of the solutions produced
     # by substitution are redundant.
     assert len(substitution([x - y, y**3 - 3*y**2 + 1], [x, y])) == 5
-
-
-
 
 
 def test_issue_5132_substitution():

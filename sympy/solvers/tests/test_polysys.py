@@ -63,8 +63,8 @@ def test_solve_poly_system():
     raises(NotImplementedError, lambda: solve_poly_system(
           [y-1,], (x, y)))
 
-    # ideally solve_poly_system should construct solutions using
-    # CRootOf for the below test
+    # solve_poly_system should ideally construct solutions using
+    # CRootOf for the test below
     assert solve_poly_system([x**5 - x + 1], [x], strict=False) == []
     raises(UnsolvableFactorError, solve_poly_system([x**5 - x + 1],
                                                     [x], strict=True))
