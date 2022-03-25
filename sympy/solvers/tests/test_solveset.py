@@ -2063,8 +2063,8 @@ def test_substitution_incorrect():
     assert substitution([a - d, b + d, c + d, d**2 + 1], [a, b, c, d]) == \
                         {(d, -d, -d, d)}
 
-    # the result in the test below is incomplete. The complete result is
-    # {(0, b), (log(2), 2)}
+    # the result in the test below is incomplete. The complete result
+    # is {(0, b), (log(2), 2)}
     assert substitution([a*(a - log(b)), a*(b - 2)], [a, b]) == \
            {(0, b)}
 
@@ -2080,8 +2080,8 @@ def test_substitution_redundant():
     assert substitution([x**2 - y**2, z - 1], [x, z]) == \
            {(-y, 1), (y, 1), (-sqrt(y**2), 1), (sqrt(y**2), 1)}
 
-    # the system below has three solutions. Two of the solutions returned
-    # by substitution are redundant.
+    # the system below has three solutions. Two of the solutions
+    # returned by substitution are redundant.
     assert len(substitution([x - y, y**3 - 3*y**2 + 1], [x, y])) == 5
 
 
