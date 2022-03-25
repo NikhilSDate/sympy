@@ -2051,7 +2051,7 @@ def test_substitution_basic():
 
 
 def test_substitution_incorrect():
-    # the solutions in the following two test are incorrect. The
+    # the solutions in the following two tests are incorrect. The
     # correct result is EmptySet in both cases.
     assert substitution([h - 1, k - 1, f - 2, f - 4, -2 * k],
                         [h, k, f]) == {(1, 1, f)}
@@ -2068,7 +2068,7 @@ def test_substitution_incorrect():
     assert substitution([a * (a - log(b)), a * (b - 2)], [a, b]) == \
            {(0, b)}
 
-    # The system in the example below is zero-dimensional, so the result
+    # The system in the test below is zero-dimensional, so the result
     # should have no free symbols
     assert substitution([-k*y + 6*x - 4*y, -81*k + 49*y**2 - 270,
                          -3*k*z + k + z**3, k**2 - 2*k + 4],
@@ -2076,11 +2076,11 @@ def test_substitution_incorrect():
 
 
 def test_substitution_redundant():
-    # the second and third solutions are redundant in the test below
-    assert substitution([x ** 2 - y ** 2, z - 1], [x, z]) == \
+    # the third and fourth solutions are redundant in the test below
+    assert substitution([x**2 - y**2, z - 1], [x, z]) == \
            {(-y, 1), (y, 1), (-sqrt(y ** 2), 1), (sqrt(y ** 2), 1)}
 
-    # the system below has three solutions. Two of the solutions produced
+    # the system below has three solutions. Two of the solutions returned
     # by substitution are redundant.
     assert len(substitution([x - y, y**3 - 3*y**2 + 1], [x, y])) == 5
 

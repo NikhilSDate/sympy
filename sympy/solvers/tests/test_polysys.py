@@ -64,7 +64,7 @@ def test_solve_poly_system():
           [y-1,], (x, y)))
 
     # solve_poly_system should ideally construct solutions using
-    # CRootOf for the test below
+    # CRootOf for the following four tests
     assert solve_poly_system([x**5 - x + 1], [x], strict=False) == []
     raises(UnsolvableFactorError, lambda: solve_poly_system(
         [x**5 - x + 1], [x], strict=True))
@@ -85,11 +85,11 @@ def test_solve_generic():
             (sqrt(-1 + sqrt(3) * I), Rational(1, 2) + sqrt(3) * I / 2)]
 
     assert solve_generic(
-        [2*x-y, (y-1)*(y**5-y+1)], NewOption, strict=False) == \
-           [(1 / 2, 1)]
+        [2*x - y, (y - 1)*(y**5 - y + 1)], NewOption, strict=False) == \
+        [(Rational(1, 2), 1)]
 
     raises(UnsolvableFactorError, lambda: solve_generic(
-        [2*x-y, (y-1)*(y**5-y+1)], NewOption, strict=True))
+        [2 * x - y, (y - 1)*(y**5 - y + 1)], NewOption, strict=True))
 
 
 def test_solve_biquadratic():
