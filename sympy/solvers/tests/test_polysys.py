@@ -69,10 +69,10 @@ def test_solve_poly_system():
     raises(UnsolvableFactorError, lambda: solve_poly_system(
         [x**5 - x + 1], [x], strict=True))
 
-    assert solve_poly_system([(x-1)*(x ** 5 - x + 1), y**2-1], [x, y],
+    assert solve_poly_system([(x - 1)*(x**5 - x + 1), y**2 - 1], [x, y],
                              strict=False) == [(1, -1), (1, 1)]
     raises(UnsolvableFactorError,
-           lambda: solve_poly_system([(x-1)*(x ** 5 - x + 1), y**2-1],
+           lambda: solve_poly_system([(x - 1)*(x**5 - x + 1), y**2-1],
                                      [x, y], strict=True))
 
 
@@ -89,7 +89,7 @@ def test_solve_generic():
         [(Rational(1, 2), 1)]
 
     raises(UnsolvableFactorError, lambda: solve_generic(
-        [2 * x - y, (y - 1)*(y**5 - y + 1)], NewOption, strict=True))
+        [2*x - y, (y - 1)*(y**5 - y + 1)], NewOption, strict=True))
 
 
 def test_solve_biquadratic():
