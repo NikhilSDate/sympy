@@ -1,5 +1,6 @@
+from sympy import evaluate
 from sympy.core.containers import Tuple
-from sympy.core.function import (Function, Lambda, nfloat, diff)
+from sympy.core.function import (Function, Lambda, nfloat, diff, Mul)
 from sympy.core.mod import Mod
 from sympy.core.numbers import (E, I, Rational, oo, pi, Integer)
 from sympy.core.relational import (Eq, Gt, Ne, Ge)
@@ -456,9 +457,9 @@ def test_solveset_sqrt_2():
 
     eq = (sqrt(x) + sqrt(x + 1) + sqrt(1 - x) - 6*sqrt(5)/5)
     ans = solveset_real(eq, x)
-    ra = S('''-1484/375 - 4*(-1/2 + sqrt(3)*I/2)*(-12459439/52734375 +
-    114*sqrt(12657)/78125)**(1/3) - 172564/(140625*(-1/2 +
-    sqrt(3)*I/2)*(-12459439/52734375 + 114*sqrt(12657)/78125)**(1/3))''')
+    ra = S('''-1484/375 - 4*(-S(1)/2 + sqrt(3)*I/2)*(-12459439/52734375 +
+    114*sqrt(12657)/78125)**(S(1)/3) - 172564/(140625*(-S(1)/2 +
+    sqrt(3)*I/2)*(-12459439/52734375 + 114*sqrt(12657)/78125)**(S(1)/3))''')
     rb = Rational(4, 5)
     assert all(abs(eq.subs(x, i).n()) < 1e-10 for i in (ra, rb)) and \
         len(ans) == 2 and \
@@ -1711,6 +1712,12 @@ def test_nonlinsolve_complex():
         (ImageSet(Lambda(n, I*(2*n*pi + pi) + log(sin(2))), S.Integers), -2),
         (ImageSet(Lambda(n, 2*n*I*pi + log(sin(2))), S.Integers), 2)})
 
+    system = [exp(x) - 2, y ** 2 - 2]
+    assert dumeq(nonlinsolve(system, [x, y]), {
+        (log(2), -sqrt(2)), (log(2), sqrt(2)),
+        (ImageSet(Lambda(n, 2 * n * I * pi + log(2)), S.Integers), {-sqrt(2)}),
+        (ImageSet(Lambda(n, 2 * n * I * pi + log(2)), S.Integers), {sqrt(2)})})
+
 
 def test_nonlinsolve_radical():
     assert nonlinsolve([sqrt(y) - x - z, y - 1], [x, y, z]) == {(1 - z, 1, z)}
@@ -1882,7 +1889,7 @@ def test_issue_16618():
 
 
 def test_issue_17566():
-    assert nonlinsolve([32*(2**x)/2**(-y) - 4**y, 27*(3**x) - 1/3**y], x, y) ==\
+    assert nonlinsolve([32*(2**x)/2**(-y) - 4**y, 27*(3**x) - S(1)/3**y], x, y) ==\
         FiniteSet((-log(81)/log(3), 1))
 
 
@@ -2082,7 +2089,8 @@ def test_substitution_redundant():
 
     # the system below has three solutions. Two of the solutions
     # returned by substitution are redundant.
-    assert len(substitution([x - y, y**3 - 3*y**2 + 1], [x, y])) == 5
+    res = substitution([x - y, y**3 - 3*y**2 + 1], [x, y])
+    assert len(res) == 5
 
 
 def test_issue_5132_substitution():
