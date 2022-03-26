@@ -1,6 +1,5 @@
-from sympy import evaluate
 from sympy.core.containers import Tuple
-from sympy.core.function import (Function, Lambda, nfloat, diff, Mul)
+from sympy.core.function import (Function, Lambda, nfloat, diff)
 from sympy.core.mod import Mod
 from sympy.core.numbers import (E, I, Rational, oo, pi, Integer)
 from sympy.core.relational import (Eq, Gt, Ne, Ge)
@@ -1557,6 +1556,9 @@ def test_nonlinsolve_basic():
     assert nonlinsolve(system, [y]) == S.EmptySet
     soln = (ImageSet(Lambda(n, 2*n*pi + pi/2), S.Integers),)
     assert dumeq(nonlinsolve([sin(x) - 1], [x]), FiniteSet(tuple(soln)))
+    soln = ((ImageSet(Lambda(n, 2*n*pi + pi), S.Integers), {1}),
+            (ImageSet(Lambda(n, 2*n*pi), S.Integers), {1}))
+    assert dumeq(nonlinsolve([sin(x), y - 1], [x, y]), FiniteSet(tuple(soln)))
     assert nonlinsolve([x**2 - 1], [x]) == FiniteSet((-1,), (1,))
 
     soln = FiniteSet((y, y))
