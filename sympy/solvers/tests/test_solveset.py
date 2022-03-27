@@ -1556,9 +1556,9 @@ def test_nonlinsolve_basic():
     assert nonlinsolve(system, [y]) == S.EmptySet
     soln = (ImageSet(Lambda(n, 2*n*pi + pi/2), S.Integers),)
     assert dumeq(nonlinsolve([sin(x) - 1], [x]), FiniteSet(tuple(soln)))
-    soln = ((ImageSet(Lambda(n, 2*n*pi + pi), S.Integers), {1}),
-            (ImageSet(Lambda(n, 2*n*pi), S.Integers), {1}))
-    assert dumeq(nonlinsolve([sin(x), y - 1], [x, y]), FiniteSet(tuple(soln)))
+    soln = ((ImageSet(Lambda(n, 2*n*pi + pi), S.Integers), FiniteSet(1)),
+            (ImageSet(Lambda(n, 2*n*pi), S.Integers), FiniteSet(1,)))
+    assert dumeq(nonlinsolve([sin(x), y - 1], [x, y]), FiniteSet(*soln))
     assert nonlinsolve([x**2 - 1], [x]) == FiniteSet((-1,), (1,))
 
     soln = FiniteSet((y, y))
@@ -1717,8 +1717,8 @@ def test_nonlinsolve_complex():
     system = [exp(x) - 2, y ** 2 - 2]
     assert dumeq(nonlinsolve(system, [x, y]), {
         (log(2), -sqrt(2)), (log(2), sqrt(2)),
-        (ImageSet(Lambda(n, 2 * n * I * pi + log(2)), S.Integers), {-sqrt(2)}),
-        (ImageSet(Lambda(n, 2 * n * I * pi + log(2)), S.Integers), {sqrt(2)})})
+        (ImageSet(Lambda(n, 2*n*I*pi + log(2)), S.Integers), FiniteSet(-sqrt(2))),
+        (ImageSet(Lambda(n, 2 * n * I * pi + log(2)), S.Integers), FiniteSet(sqrt(2)))})
 
 
 def test_nonlinsolve_radical():
