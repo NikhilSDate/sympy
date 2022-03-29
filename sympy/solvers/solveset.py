@@ -24,7 +24,8 @@ from sympy.core.sorting import default_sort_key, ordered
 from sympy.core.symbol import Symbol, _uniquely_named_symbol
 from sympy.core.sympify import _sympify
 from sympy.core.traversal import iterfreeargs
-from sympy.simplify.simplify import simplify, fraction, trigsimp
+from sympy.polys.polyroots import UnsolvableFactorError
+from sympy.simplify.simplify import simplify, fraction, trigsimp, nsimplify
 from sympy.simplify import powdenest, logcombine
 from sympy.functions import (log, tan, cot, sin, cos, sec, csc, exp,
                              acos, asin, acsc, asec,
@@ -44,7 +45,7 @@ from sympy.ntheory.residue_ntheory import discrete_log, nthroot_mod
 from sympy.polys import (roots, Poly, degree, together, PolynomialError,
                          RootOf, factor, lcm, gcd)
 from sympy.polys.polyerrors import CoercionFailed
-from sympy.polys.polytools import invert
+from sympy.polys.polytools import invert, poly, groebner
 from sympy.polys.solvers import (sympy_eqs_to_ring, solve_lin_sys,
     PolyNonlinearError)
 from sympy.polys.matrices.linsolve import _linsolve
@@ -3454,6 +3455,10 @@ def _separate_poly_nonpoly(system, symbols):
     polys = []
     polys_expr = []
     nonpolys = []
+    # unrad_changed stores a list of expressions containing
+    # radicals that were processed using unrad
+    # this is useful if solutions need to be checked later.
+    unrad_changed = []
     denominators = set()
     poly = None
     for eq in system:
@@ -3465,6 +3470,7 @@ def _separate_poly_nonpoly(system, symbols):
         # try to remove sqrt and rational power
         without_radicals = unrad(simplify(eq), *symbols)
         if without_radicals:
+            unrad_changed.append(eq)
             eq_unrad, cov = without_radicals
             if not cov:
                 eq = eq_unrad
@@ -3478,8 +3484,38 @@ def _separate_poly_nonpoly(system, symbols):
             polys_expr.append(poly.as_expr())
         else:
             nonpolys.append(eq)
-    return polys, polys_expr, nonpolys, denominators
+    return polys, polys_expr, nonpolys, denominators, unrad_changed
 # end of def _separate_poly_nonpoly()
+
+
+def _handle_poly(polys, symbols):
+    # Compute a Groebner basis in grevlex order wrt the ordering given
+
+    basis = groebner(polys, symbols, polys=False, order='grevlex')
+    poly_sol = [{}]
+    poly_eqs = list(basis)
+    # Does the polynomial system have a finite number of solutions?
+    if basis.is_zero_dimensional:
+        # Convert Groebner basis to lex ordering
+        basis = basis.fglm('lex')
+
+        # Solve the zero-dimensional case using solve_poly_system if
+        # possible. Otherwise fall back on using substitution below.
+        try:
+            result = solve_poly_system(basis, *symbols, strict=True)
+        except UnsolvableFactorError:
+            # solve_poly_system with strict=True will raise NotImplementedError
+            # if it knows that the solution set is incomplete
+            # (which can occur if not all solutions are expressible in radicals)
+            pass
+        else:
+            return [dict(zip(symbols, res)) for res in result], []
+
+    if 1 in poly_eqs:
+        return [], []
+    else:
+        poly_eqs = list(groebner(polys, symbols, polys=False))
+        return poly_sol, poly_eqs
 
 
 def nonlinsolve(system, *symbols):
@@ -3489,8 +3525,7 @@ def nonlinsolve(system, *symbols):
     system is also supported (A system with infinitely many solutions is said
     to be positive-dimensional). In a positive dimensional system the solution will
     be dependent on at least one symbol. Returns both real solution
-    and complex solution (if they exist). The possible number of solutions
-    is zero, one or infinite.
+    and complex solution (if they exist).
 
     Parameters
     ==========
@@ -3627,7 +3662,7 @@ def nonlinsolve(system, *symbols):
     ``substitution`` method with this polynomial and non polynomial equation(s),
     to solve for unsolved variables. Here to solve for particular variable
     solveset_real and solveset_complex is used. For both real and complex
-    solution ``_solve_using_know_values`` is used inside ``substitution``
+    solution ``_solve_using_known_values`` is used inside ``substitution``
     (``substitution`` will be called when any non-polynomial equation is present).
     If a solution is valid its general solution is added to the final result.
 
@@ -3638,8 +3673,6 @@ def nonlinsolve(system, *symbols):
     intersection for that variable is added before returning final solution.
 
     """
-    from sympy.polys.polytools import is_zero_dimensional
-
     if not system:
         return S.EmptySet
 
@@ -3656,6 +3689,7 @@ def nonlinsolve(system, *symbols):
                'system is to be found.')
         raise IndexError(filldedent(msg))
 
+    symbols = list(map(_sympify, symbols))
     system, symbols, swap = recast_to_symbols(system, symbols)
     if swap:
         soln = nonlinsolve(system, symbols)
@@ -3665,33 +3699,57 @@ def nonlinsolve(system, *symbols):
         return _solveset_work(system, symbols)
 
     # main code of def nonlinsolve() starts from here
-    polys, polys_expr, nonpolys, denominators = _separate_poly_nonpoly(
-        system, symbols)
 
-    if len(symbols) == len(polys):
-        # If all the equations in the system are poly
-        if is_zero_dimensional(polys, symbols):
-            # finite number of soln (Zero dimensional system)
-            try:
-                return _handle_zero_dimensional(polys, symbols, system)
-            except NotImplementedError:
-                # Right now it doesn't fail for any polynomial system of
-                # equation. If `solve_poly_system` fails then `substitution`
-                # method will handle it.
-                result = substitution(
-                    polys_expr, symbols, exclude=denominators)
-                return result
+    polys, polys_expr, nonpolys, denominators, unrad_changed = \
+        _separate_poly_nonpoly(system, symbols)
 
-        # positive dimensional system
-        res = _handle_positive_dimensional(polys, symbols, denominators)
-        if res is S.EmptySet and any(not p.domain.is_Exact for p in polys):
-            raise NotImplementedError("Equation not in exact domain. Try converting to rational")
-        else:
-            return res
+    poly_eqs = []
+    poly_sol = [{}]
 
+    if polys:
+        # Convert floats to Rational for polynomial calculations
+        polys = [poly(nsimplify(p, rational=True)) for p in polys]
+        poly_sol, poly_eqs = _handle_poly(polys, symbols)
+        if poly_sol and poly_sol[0]:
+            poly_syms = set().union(*(eq.free_symbols for eq in polys))
+            unrad_syms = set().union(*(eq.free_symbols for eq in unrad_changed))
+            if unrad_syms == poly_syms and unrad_changed:
+                # if all the symbols have been solved by _handle_poly
+                # and unrad has been used then check solutions
+                poly_sol = [sol for sol in poly_sol if checksol(unrad_changed, sol)]
+
+    # Collect together the unsolved polynomials with the non-polynomial
+    # equations.
+    remaining = poly_eqs + nonpolys
+
+    # to_tuple converts a solution dictionary to a tuple containing the
+    # value for each symbol
+    to_tuple = lambda sol: tuple(sol[s] for s in symbols)
+
+    if not remaining:
+        # If there is nothing left to solve then return the solution from
+        # solve_poly_system directly.
+        return FiniteSet(*map(to_tuple, poly_sol))
     else:
-        # If all the equations are not polynomial.
-        # Use `substitution` method for the system
-        result = substitution(
-            polys_expr + nonpolys, symbols, exclude=denominators)
-        return result
+        # Here we handle:
+        #
+        #  1. The Groebner basis if solve_poly_system failed.
+        #  2. The Groebner basis in the positive-dimensional case.
+        #  3. Any non-polynomial equations
+        #
+        # If solve_poly_system did succeed then we pass those solutions in as
+        # preliminary results.
+        subs_res = substitution(remaining, symbols, result=poly_sol, exclude=denominators)
+
+        if not isinstance(subs_res, FiniteSet):
+            return subs_res
+
+        # check solutions produced by substitution. Currently, checking is done for
+        # only those solutions which have non-Set variable values.
+        if unrad_changed:
+            result = [dict(zip(symbols, sol)) for sol in subs_res.args]
+            correct_sols = [sol for sol in result if any(isinstance(v, Set) for v in sol)
+                            or checksol(unrad_changed, sol) != False]
+            return FiniteSet(*map(to_tuple, correct_sols))
+        else:
+            return subs_res
