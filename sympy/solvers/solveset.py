@@ -3708,7 +3708,6 @@ def nonlinsolve(system, *symbols):
 
     if polys:
         # Convert floats to Rational for polynomial calculations
-        polys = [poly(nsimplify(p, rational=True)) for p in polys]
         poly_sol, poly_eqs = _handle_poly(polys, symbols)
         if poly_sol and poly_sol[0]:
             poly_syms = set().union(*(eq.free_symbols for eq in polys))
