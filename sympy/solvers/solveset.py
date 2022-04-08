@@ -15,7 +15,7 @@ from sympy.core import (S, Pow, Dummy, pi, Expr, Wild, Mul, Equality,
                         Add)
 from sympy.core.containers import Tuple
 from sympy.core.function import (Lambda, expand_complex, AppliedUndef,
-                                expand_log, _mexpand, expand_trig)
+                                 expand_log, _mexpand, expand_trig, nfloat)
 from sympy.core.mod import Mod
 from sympy.core.numbers import igcd, I, Number, Rational, oo, ilcm
 from sympy.core.power import integer_log
@@ -3537,6 +3537,11 @@ def _handle_poly(polys, symbols):
         # Convert Groebner basis to lex ordering
         basis = basis.fglm('lex')
 
+        # Convert polynomial coefficients back to float before solve_poly_system
+        # is called
+        if inexact:
+            basis = [nfloat(p) for p in basis]
+
         # Solve the zero-dimensional case using solve_poly_system if possible.
         # If some polynomials have factors that cannot be solved in radicals
         # then this will fail. Using solve_poly_system(..., strict=True)
@@ -3569,15 +3574,8 @@ def _handle_poly(polys, symbols):
         poly_sol = no_information
         poly_eqs = list(groebner(polys, symbols, order='lex', polys=False))
 
-    if inexact:
-
-        # Convert solution values and polynomial coefficients back to float if
-        # originally passed polynomials have float coefficients.
-        poly_sol = [{sym: val.evalf() for sym, val in sol.items()}
-                    for sol in poly_sol]
-
-        # XXX: This is a bit of a hack
-        poly_eqs = [p*1.0 for p in poly_eqs]
+        if inexact:
+            poly_eqs = [nfloat(p) for p in poly_eqs]
 
     return poly_sol, poly_eqs
 
